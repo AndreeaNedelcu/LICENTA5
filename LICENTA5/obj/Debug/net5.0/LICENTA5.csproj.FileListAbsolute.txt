@@ -1,0 +1,9 @@
+C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\obj\Debug\net5.0\LICENTA5.csprojAssemblyReference.cache
+C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\obj\Debug\net5.0\LICENTA5.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\obj\Debug\net5.0\LICENTA5.AssemblyInfoInputs.cache
+C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\obj\Debug\net5.0\LICENTA5.AssemblyInfo.cs
+C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\obj\Debug\net5.0\LICENTA5.csproj.CoreCompileInputs.cache
+C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\obj\Debug\net5.0\LICENTA5.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\obj\Debug\net5.0\LICENTA5.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\obj\Debug\net5.0\LICENTA5.RazorAssemblyInfo.cache
+C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\obj\Debug\net5.0\LICENTA5.RazorAssemblyInfo.cs

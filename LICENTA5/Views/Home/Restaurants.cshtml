@@ -1,0 +1,38 @@
+﻿@model LICENTA5.Models.ViewModels.RestaurantsListViewModel
+@inject SignInManager<ApplicationUser> signInManager;
+
+<div id="categories" style="width:100%; height:80px">
+    <ul class="nav nav-tabs" role="tablist">
+       
+                <vc:navigation-menu />
+            
+    </ul>
+        @*<vc:navigation-menu />*@
+</div>
+@if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+{
+    <a asp-action="addRestaurant" asp-controller="home" class="btn btn-common">Add restaurant</a>
+
+}
+
+
+<div class="containerRest">
+    @foreach (var p in Model.Restaurants)
+    {
+        <partial name="RestaurantSummary" model="p" />
+
+    }
+
+    <div page-model="@Model.PagingInfo" page-action="Restaurants" page-classes-enabled="true"
+         page-class="btn" page-class-normal="btn-outline-dark"
+         page-class-selected="btn-primary" class="btn-group pull-right m-1">
+        here
+    </div>
+
+</div>
+
+
+
+
+
+

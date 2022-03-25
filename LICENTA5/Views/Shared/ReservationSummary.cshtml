@@ -1,0 +1,48 @@
+﻿@model Reservation
+@inject IStoreRepository repository
+@{
+    var photoPath = "../../images/" + (@repository.GetRestaurant((int)Model.RestaurantId).PhotoPath ?? "noimage.jpg");
+    var currentHour = ViewData["CurrentHourForPartial"];
+    DateTime currentDate = (DateTime)ViewData["CurrentDateForPartial"];
+    int result = DateTime.Compare(currentDate, Model.Date);
+
+}
+
+<div class="card" style="width: 18rem; background-color:whitesmoke; margin:30px">
+    <img src=@photoPath class="card-img-top" alt="...">
+    <div class="card-body">
+        <h5 class="card-title"  style="color:black">Reservation at @repository.GetRestaurant((int)Model.RestaurantId).RestaurantName</h5>
+        @*<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>*@
+        <p class="card-text"  >
+
+        <p style="color:black"> Seats: @Model.NrPers </p>
+        <hr />
+        <p style="color:black">  Hour: @Model.HourComing</p>
+        <hr />
+        <p style="color:black"> Date: @Model.Date.ToShortDateString()</p>
+        </p>
+        <hr />
+        @if (result < 0) //Ziua curenta este mai mica sau egala decat ziua rezervarii =>ok
+        {
+            <a asp-controller="home" asp-action="EditReservation" asp-route-id="@Model.ReservationId" class="btn btn-common m-1">Edit</a>
+
+        }
+        else
+        {
+            @if ((int)currentHour < Model.HourComing) //daca ora curenta < ora rezervarii =>ok
+            {
+                <a asp-controller="home" asp-action="EditReservation" asp-route-id="@Model.ReservationId" class="btn btn-common m-1">Edit</a>
+            }
+            else
+            {
+                <a asp-controller="home" asp-action="EditReservation" asp-route-id="@Model.ReservationId" class="btn btn-common m-1 disabled">Edit</a>
+            }
+           
+        }
+
+
+
+        <a asp-controller="home" asp-action="DeleteReservation" asp-route-id="@Model.ReservationId" class="btn btn-common m-1">Delete</a>
+    </div>
+</div>
+

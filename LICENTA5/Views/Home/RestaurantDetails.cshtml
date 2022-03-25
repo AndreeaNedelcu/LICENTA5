@@ -1,0 +1,205 @@
+﻿@model RestaurantDetailsViewModel
+@inject IStoreRepository repository
+@inject UserManager<ApplicationUser> userManager;
+@{
+    var photoPath = "../../images/" + (Model.Restaurant.PhotoPath ?? "noimage.jpg");
+
+}
+
+<h3 class=" row justify-content-center" style="color:white; text-decoration:solid">@Model.Restaurant.RestaurantName </h3>
+
+<div class="container" style="color:white">
+
+    <!-- Page Section Start -->
+    <div class="page-container blog">
+        <div class="container">
+            <div class="row">
+                <!-- Left Sidebar -->
+                <div class="col-md-9 col-sm-12 col-sx-12 lift-sidebar clearfix">
+                    <div class="blog-post">
+
+                        <div class="post">
+                            <div class="post-img">
+                                <img class="imageCustom" src=@photoPath style=" width:100%; height:100%" />
+                            </div>
+                            <div class="post-content">
+                                <h3><a href="#">@Model.Restaurant.RestaurantName</a></h3>
+                                <ul class="list">
+                                    <li><span>Program:</span><a href="#"> @Model.Restaurant.openHour- @Model.Restaurant.closingHour</a></li>
+                                    <li><span>Capacity:</span><a href="#"> @Model.Restaurant.nrPersMax</a></li>
+                                </ul>
+                                <div class="post-desc">
+                                    <p>
+                                        @Model.Restaurant.Description
+                                    </p>
+
+                                </div>
+                                <div>
+                                    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                                        <ol class="carousel-indicators">
+
+                                            @for (int i = 0; i < Model.Gallery.Count(); i++)
+                                            {
+                                                <li data-target="#carouselExampleIndicators" data-slide-to="@i" class="@(i==0 ? "active" : "") "></li>
+                                            }
+                                        </ol>
+                                        <div class="carousel-inner">
+                                            @for (int i = 0; i < Model.Gallery.Count(); i++)
+                                            {
+                                                <div class="@(i==0 ? "carousel-item active" : "carousel-item") ">
+                                                    <img class="GallerySlide d-block w-100" src="~/images/@Model.Gallery[i].URL" alt="@Model.Gallery[i].Name" style="width:200px; height:400px">
+                                                </div>
+                                            }
+
+                                        </div>
+
+                                        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="sr-only">Previous</span>
+                                        </a>
+                                        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="sr-only">Next</span>
+                                        </a>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <!-- Right Sidebar -->
+                <div class="col-md-3 col-sm-12 col-xs-12 right-sidebar">
+
+
+
+                    <!-- Recent Posts widget -->
+                    <div class="widget recent">
+                        <h5 class="widget-title">Recent Events</h5>
+                        <p>Sed tincidunt quam nisi, ac condimentum</p>
+                        <ul class="posts-list">
+                            <li>
+                                <div class="widget-thumb">
+                                    <a href="#"><img src="assets/img/blog/thumb1.jpg" alt="" /></a>
+                                </div>
+                                <div class="widget-content">
+                                    <a href="#">Rating</a>
+                                    <span>2016/01/21</span>
+                                </div>
+                                <div class="clearfix"></div>
+                            </li>
+                            <li>
+                                <div class="widget-thumb">
+                                    <a href="#"><img src="assets/img/blog/thumb2.jpg" alt="" /></a>
+                                </div>
+                                <div class="widget-content">
+                                    <a href="#">Comments</a>
+                                    <span>2016/01/30</span>
+                                </div>
+                                <div class="clearfix"></div>
+                            </li>
+                            <li>
+                                @foreach (var item in Model.RestaurantRatings)
+                                {
+                                    <partial name="ShowReview" model="item" />
+                                }
+
+                            </li>
+                            <li>
+                                <div class="widget-thumb">
+                                    <div class="container d-flex justify-content-center mt-200">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="stars"> 
+                                                    @*<form asp-controller="home" asp-action="RestaurantDetails" method="post">*@
+                                                        <input class="star star-5" id="star-5" type="radio" name="star" value="5"  />
+                                                        <label id="label5" class="star star-5" for="star-5"></label>
+                                                        <input class="star star-4" id="star-4" type="radio" name="star" value="4" />
+                                                        <label id="label4" class="star star-4" for="star-4"></label>
+                                                        <input class="star star-3" id="star-3" type="radio" name="star" value="3" />
+                                                        <label  id="label3" class="star star-3" for="star-3"></label>
+                                                        <input class="star star-2" id="star-2" type="radio" name="star" value="2" />
+                                                        <label  id="label2" class="star star-2" for="star-2"></label>
+                                                        <input class="star star-1" id="star-1" type="radio" name="star" value="1" />
+                                                        <label id="label1" class="star star-1" for="star-1"></label>
+                                                    <button id="btnRate" onclick="rate()">Send rate</button>
+                                                    @*</form>*@
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="clearfix"></div>
+                            </li>
+                            <li>
+                                <div id="map" style="height:230px; width:300px">
+
+                                </div>
+                            </li>
+
+                        </ul>
+                        @if (Model.Restaurant.EmptySeats.Equals(0))
+                        {
+                            <span> Fully booked </span>
+                        }
+                        else
+                        {
+                            <a asp-controller="home" asp-action="addBooking" asp-route-id="@Model.Restaurant.RestaurantID" class="btn btn-common m-1">Book a table</a>
+                        }
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Page Section End -->
+
+
+</div>
+
+@section Scripts{
+    <script>
+
+        var latitude = parseFloat("@Model.Restaurant.Latitude");
+        var longitude = parseFloat("@Model.Restaurant.Longitude");
+        var map;
+
+        function initMap() {
+            var markedPlace = { lat: latitude, lng: longitude };
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: markedPlace,
+            zoom: 20
+        }
+        );
+        //const marker = new google.maps.Marker({
+        //    position: markedPlace,
+        //    map: map,
+        //});
+        }
+
+        var stars5 = document.getElementById("star-5");
+        var stars4 = document.getElementById("star-4");
+        var stars3 = document.getElementById("star-3");
+        var stars2 = document.getElementById("star-2");
+        var stars1 = document.getElementById("star-1");
+        function rate() {
+            if (stars5.checked == true) {
+
+                @*@repository.AddRating(new RestaurantRating { Rating = 5, RestaurantId = Model.Restaurant.RestaurantID });*@
+            }
+            else if (stars4.checked == true) {
+                  @*@repository.AddRating(new RestaurantRating { Rating = 4, RestaurantId = Model.Restaurant.RestaurantID });*@
+            }
+        }
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=@(ViewData["MyKeyMaps"])&callback=initMap"
+            async defer></script>
+}

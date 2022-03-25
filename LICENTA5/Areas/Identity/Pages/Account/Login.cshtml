@@ -1,0 +1,66 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+    Layout = "~/Areas/Identity/Pages/_AuthLayout.cshtml";
+}
+
+<div class="col-md-10 offset-md-1" >
+    <section>
+        <div class="login-form-icon" style="text-align:center; padding-top:4px">
+            @*<i class="fas fa-user-circle fa-9x text-secondary"></i>*@
+            <img src="https://img.icons8.com/external-kmg-design-flat-kmg-design/100/000000/external-user-user-interface-kmg-design-flat-kmg-design.png" />     
+        </div>
+        <form id="account" method="post">
+
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Input.Email"></label>
+                <input asp-for="Input.Email" class="form-control" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Password"></label>
+                <input asp-for="Input.Password" class="form-control" />
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label asp-for="Input.RememberMe">
+                        <input asp-for="Input.RememberMe" />
+                        @Html.DisplayNameFor(m => m.Input.RememberMe)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-common btn-block">Log in</button>
+            </div>
+        </form>
+    </section>
+</div>
+<div class="col-md-2">
+    <form method="post" asp-action="ExternalLogin"  asp-controller="Home"  asp-route-returnUrl="@Model.ReturnUrl">
+        <div>
+            @foreach (var provider in Model.ExternalLogins)
+            {
+                <button type="submit" class="btn btn-primary"
+                        name="provider" value="@provider.Name"
+                        title="Log in using your @provider.DisplayName account">
+                    @provider.DisplayName
+                </button>
+            }
+        </div>
+    </form>
+</div>
+
+<style>
+    body {
+        background: rgb(2,0,36);
+        background: radial-gradient(circle, rgba(2,0,36,1) 0%, rgba(60,4,33,1) 56%, rgba(76,8,21,1) 100%, rgba(0,212,255,1) 100%);
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
