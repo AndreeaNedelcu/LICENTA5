@@ -319,7 +319,7 @@ e.Type == type).Count()
             }).ToList();
             restDetails.RestaurantRatings = repository.Ratings(id).ToList();
 
-            ViewData["MyKeyMaps"] = "AIzaSyDq_B5S5fvlG2VbaEYRDkG59Wc7pjs4ZbQ";
+            ViewData["MyKeyMaps"] = "";
             return View(restDetails);
         }
 
