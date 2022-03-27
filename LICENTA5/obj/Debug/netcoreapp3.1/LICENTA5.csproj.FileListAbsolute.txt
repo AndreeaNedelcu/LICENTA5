@@ -230,3 +230,8 @@ C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\obj\Debug\netcoreapp3.1\LICENTA5
 C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Authentication.Facebook.dll
 C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Authentication.Google.dll
 C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\obj\Debug\netcoreapp3.1\Razor\Views\Shared\ShowReview.cshtml.g.cs
+C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\obj\Debug\netcoreapp3.1\Razor\Views\Home\ConfirmEmail.cshtml.g.cs
+C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\MailKit.dll
+C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\MimeKit.dll
+C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\NETCore.MailKit.dll
+C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\BouncyCastle.Crypto.dll

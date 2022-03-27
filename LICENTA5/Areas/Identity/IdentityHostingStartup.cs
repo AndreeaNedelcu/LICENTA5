@@ -30,12 +30,13 @@ namespace LICENTA5.Areas.Identity
                 {
                     options.AppId = "4838067146306784";
                     options.AppSecret = "bb61d6141e5e0d0f045e833aa109857c";
-                }); 
+                });
 
 
                 services.AddDefaultIdentity<ApplicationUser>(options =>
                 {
                     options.SignIn.RequireConfirmedAccount = false;
+                    options.SignIn.RequireConfirmedEmail = false;
                     options.Password.RequireUppercase = false;
                     options.Password.RequireLowercase = false;
 
@@ -43,7 +44,8 @@ namespace LICENTA5.Areas.Identity
                     options.User.RequireUniqueEmail = true;
 
                 }).AddRoles<IdentityRole>()
-                    .AddEntityFrameworkStores<AuthDbContext>();
+                    .AddEntityFrameworkStores<AuthDbContext>()
+                    .AddDefaultTokenProviders();
             });
         }
     }

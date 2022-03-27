@@ -87,6 +87,12 @@ namespace LICENTA5.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
+                var user = await _userManager.FindByEmailAsync(Input.Email);
+                if (user != null && !user.EmailConfirmed && (await _userManager.CheckPasswordAsync(user, Input.Password)))
+                {
+                    ModelState.AddModelError(string.Empty, "Email not confirmed");
+                    return Page();
+                }
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
@@ -104,11 +110,13 @@ namespace LICENTA5.Areas.Identity.Pages.Account
                     _logger.LogWarning("User account locked out.");
                     return RedirectToPage("./Lockout");
                 }
+
                 else
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return Page();
                 }
+               
             }
 
             // If we got this far, something failed, redisplay form

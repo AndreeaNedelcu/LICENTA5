@@ -699,7 +699,7 @@ e.Type == type).Count()
             };
 
             if (remoteError != null)
-            {
+            { 
                 ModelState
                     .AddModelError(string.Empty, $"Error from external provider: {remoteError}");
 
@@ -711,7 +711,8 @@ e.Type == type).Count()
               if (info == null)
             {
                 ModelState
-                    .AddModelError(string.Empty, "Error loading external login information.");
+                    .AddModelError(string
+                     .Empty, "Error loading external login information.");
 
                 return View("Login", loginViewModel);
             }
@@ -767,8 +768,36 @@ e.Type == type).Count()
 
         //public IActionResult ShowReview(long RestaurantId)
         //{
-        //    var Ratings = repository.Ratings(RestaurantId);
+        //     var Ratings = repository.Ratings(RestaurantId);
         //    return View(Ratings);
         //}
+
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (userId == null || token == null)
+            {
+                return RedirectToAction("index", "home");
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = $"The User ID {userId} is invalid";
+                return View("NotFound");
+            }
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
+            {
+                return View();
+            }
+
+            ViewBag.ErrorTitle = "Email cannot be confirmed";
+            return View("Error");
+        }
+
+        
     }
 }
+

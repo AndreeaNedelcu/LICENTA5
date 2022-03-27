@@ -1,16 +1,17 @@
 ﻿@page
 @model LoginModel
-
+@inject SignInManager<ApplicationUser> signInManager;
 @{
     ViewData["Title"] = "Log in";
     Layout = "~/Areas/Identity/Pages/_AuthLayout.cshtml";
+    var externalLogins = (await signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 }
 
-<div class="col-md-10 offset-md-1" >
+<div class="col-md-10 offset-md-1">
     <section>
         <div class="login-form-icon" style="text-align:center; padding-top:4px">
             @*<i class="fas fa-user-circle fa-9x text-secondary"></i>*@
-            <img src="https://img.icons8.com/external-kmg-design-flat-kmg-design/100/000000/external-user-user-interface-kmg-design-flat-kmg-design.png" />     
+            <img src="https://img.icons8.com/external-kmg-design-flat-kmg-design/100/000000/external-user-user-interface-kmg-design-flat-kmg-design.png" />
         </div>
         <form id="account" method="post">
 
@@ -40,9 +41,9 @@
     </section>
 </div>
 <div class="col-md-2">
-    <form method="post" asp-action="ExternalLogin"  asp-controller="Home"  asp-route-returnUrl="@Model.ReturnUrl">
+    <form method="post" asp-action="ExternalLogin" asp-controller="Home" asp-route-returnUrl="@Model.ReturnUrl">
         <div>
-            @foreach (var provider in Model.ExternalLogins)
+            @foreach (var provider in externalLogins)
             {
                 <button type="submit" class="btn btn-primary"
                         name="provider" value="@provider.Name"

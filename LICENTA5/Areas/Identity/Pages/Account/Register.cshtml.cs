@@ -94,18 +94,26 @@ namespace LICENTA5.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, firstName = Input.firstName, lastName = Input.lastName }; var result = await _userManager.CreateAsync(user, Input.Password);
+                var user = new ApplicationUser { 
+                    UserName = Input.Email, 
+                    Email = Input.Email, 
+                    firstName = Input.firstName, 
+                    lastName = Input.lastName }; 
+                var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
-                  
-                   
+                    //var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    //var confirmLink = Url.Action("ConfirmEmail", "Home",
+                    //    new { userId = user.Id, token = token }, Request.Scheme);
 
+                    //_logger.Log(LogLevel.Warning, confirmLink);
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
+                        "/Home/ConfirmEmail",
                         pageHandler: null,
                         values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
@@ -120,9 +128,14 @@ namespace LICENTA5.Areas.Identity.Pages.Account
                     else
                     {
                         await _userManager.AddToRoleAsync(user, "User");
-                        
+
                         await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
+                        return LocalRedirect(returnUrl); 
+
+                        //// ViewData["ErrorTitle"] = "Registartion successful";
+                        ////  ViewData["ErrorMessage"] = "Before Login, please confirm you email. We have sent you an email with the confirmation link";
+                        //ModelState.AddModelError(string.Empty, "Before Login, please confirm you email. We have sent you an email with the confirmation link");
+                        //return Page();
                     }
                 }
                 foreach (var error in result.Errors)
