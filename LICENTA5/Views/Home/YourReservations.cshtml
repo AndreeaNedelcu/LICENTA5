@@ -1,7 +1,8 @@
-﻿@model IEnumerable<Reservation>
+﻿@*@model IEnumerable<Reservation>*@
+@model YourReservationsViewModel
 @inject SignInManager<ApplicationUser> signInManager;
 
-@{ 
+@{
     var currentHour = ViewBag.CurrentHour;
     DateTime currentDate = ViewBag.CurrentDate;
 }
@@ -10,7 +11,7 @@
 
 
 
-    <h3 class="col-md-12" style="color:white; height:auto">Thank you for choosing us! You can se all your reservations here...</h3>
+    <h3 class="col-md-6" style="color:white; height:120px">Thank you for choosing us! You can se all your reservations here...</h3>
 
     @if (signInManager.IsSignedIn(User) && User.IsInRole("Premium-User"))
     {
@@ -35,7 +36,13 @@
             </div>
         </div>
     }
-    @foreach (var p in Model)
+
+
+    <div class="col-md-12">
+        <a asp-action="YourReservations" asp-route-sortOrder="@ViewData["DateSortParm"]">Order by date</a>
+    </div>
+
+    @foreach (var p in Model.Reservations)
     {
         <partial style="min-width: 18rem; max-width:30.5%;" name="ReservationSummary" model="p" view-data='@new ViewDataDictionary(ViewData) { { "CurrentHourForPartial", currentHour }
                                              , {"CurrentDateForPartial", currentDate } }' />
@@ -44,6 +51,11 @@
 
 
 
+</div>
+<div page-model="@Model.PagingInfo" page-action="YourReservations" page-classes-enabled="true"
+     page-class="btn" page-class-normal="btn-outline-dark"
+     page-class-selected="btn-common" class="btn-group pull-right m-1">
+    
 </div>
 
 

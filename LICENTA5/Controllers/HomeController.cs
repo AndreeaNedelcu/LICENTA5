@@ -30,6 +30,7 @@ namespace LICENTA5.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         ILogger<LoginModel> _logger2;
         public int PageSize = 4;
+        public int PageSizeReservations = 3;
        
         public HomeController(ILogger<HomeController> logger, 
             IStoreRepository repo,
@@ -58,17 +59,40 @@ namespace LICENTA5.Controllers
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         [AllowAnonymous]
-        public IActionResult Index(string? searchTerm)
+        public IActionResult Index(string? searchTerm, Restaurant? randomRest)
         {
             var displaydata = repository.Search(searchTerm).ToList();
-           
-            
-            var model = new IndexViewModel
-            {
-                RestaurantsList = displaydata,
-                SearchTerm=searchTerm
-            };
 
+            //Random rand = new Random();
+            //int toSkip = rand.Next(1, repository.Restaurants.Count());
+            //Restaurant res = null;
+
+            //5    res = repository.Restaurants.Skip(toSkip).Take(1).FirstOrDefault();
+            IndexViewModel model = null;
+
+            if (randomRest == null)
+            {
+                 model = new IndexViewModel
+                {
+                    RestaurantsList = displaydata,
+                    SearchTerm = searchTerm
+
+
+                };
+            }
+            else
+            {
+                model = new IndexViewModel
+                {
+                    RestaurantsList = displaydata,
+                    SearchTerm = searchTerm,
+                    RandomRestaurant=randomRest
+
+
+
+                };
+            }
+           
             return View(model);
         }
 
@@ -88,17 +112,17 @@ namespace LICENTA5.Controllers
             return View();
         }
         [AllowAnonymous]
-        public ViewResult Restaurants(string type, int productPage = 1)
+        public ViewResult Restaurants(string type, int page = 1)
             => View(new RestaurantsListViewModel
             {
                 Restaurants = repository.Restaurants
                 .Where(p => type == null || p.Type==type)
             .OrderBy(p => p.RestaurantID)
-            .Skip((productPage - 1) * PageSize)
+            .Skip((page - 1) * PageSize)
             .Take(PageSize),
                 PagingInfo = new PagingInfo
                 {
-                    CurrentPage = productPage,
+                    CurrentPage = page,
                     ItemsPerPage = PageSize,
                     TotalItems = type == null ?
 repository.Restaurants.Count() :
@@ -115,13 +139,30 @@ e.Type == type).Count()
 
       
         [Authorize]
-        public async Task<IActionResult> YourReservationsAsync()
+        public async Task<IActionResult> YourReservationsAsync(string? sortOrder, int page=1)
         {
-            var model = repository.GetReservations(await GetCurrentUserId());
+            int pageSize = 3;
+             var modelReservations = repository.GetReservations(await GetCurrentUserId());
+           // var modelReservations = repository.GetReservations(await GetCurrentUserId()).Skip((pageNumber - 1) * PageSizeReservations).Take(PageSizeReservations);
 
             ApplicationUser user = await _userManager.GetUserAsync(HttpContext.User);
             //if (user.Reservations.Count > 2)
-            if (repository.GetReservations(await GetCurrentUserId()).Count() >2)
+
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date" : "Date";
+            switch (sortOrder)
+            {
+
+                case "Date":
+                    modelReservations = modelReservations.OrderBy(s => s.Date);
+                    break;
+                case "date_desc":
+                    modelReservations = modelReservations.OrderByDescending(s => s.Date);
+                    break;
+                default:
+                    modelReservations = modelReservations.OrderBy(s => s.ReservationId);
+                    break;
+            }
+            if (repository.GetReservations(await GetCurrentUserId()).Count() >10)
             {
                 await _userManager.AddToRoleAsync(user, "Premium-User");
             }
@@ -132,7 +173,7 @@ e.Type == type).Count()
             ViewBag.CurrentHour = currentHour;
             ViewBag.CurrentDate = currentDate;
 
-            foreach (var i in model.ToList())
+            foreach (var i in modelReservations.ToList())
             {
                 DateTime reservationRealDate = new DateTime(i.Date.Year, i.Date.Month, i.Date.Day, i.HourComing, currentDate.Minute, currentDate.Second);
                 if (currentDate.AddHours(1) > reservationRealDate)
@@ -146,7 +187,17 @@ e.Type == type).Count()
                    
                 }
             }
-
+            YourReservationsViewModel model = new YourReservationsViewModel
+            {
+                Reservations = modelReservations.Skip((page - 1)*PageSizeReservations).Take(PageSizeReservations),
+                PagingInfo = new PagingInfo
+                {
+                    CurrentPage = page,
+                    ItemsPerPage = PageSizeReservations,
+                    TotalItems = modelReservations.Count()
+                }
+            };
+            
             return View(model);
         }
 
@@ -797,7 +848,9 @@ e.Type == type).Count()
             return View("Error");
         }
 
-        
+       
     }
+
+
 }
 

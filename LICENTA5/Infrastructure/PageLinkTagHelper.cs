@@ -44,9 +44,9 @@ namespace LICENTA5.Infrastructure
                 TagBuilder tag = new TagBuilder("a");
 
                 tag.Attributes["href"] = urlHelper.Action(PageAction,
-                new { productPage = i });
+                new { page = i });
 
-                //PageUrlValues["productPage"] = i;
+                //PageUrlValues["page"] = i;
                 //tag.Attributes["href"] = urlHelper.Action(PageAction, PageUrlValues);
 
                 if (PageClassesEnabled)

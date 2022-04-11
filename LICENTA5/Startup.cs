@@ -90,18 +90,20 @@ namespace LICENTA5
 
 
                 endpoints.MapControllerRoute("catpage",
-"{type}/Page{productPage:int}",
+"{type}/Page{page:int}",
 new { Controller = "Home", action = "Index" });
-                endpoints.MapControllerRoute("page", "Page{productPage:int}",
-                new { Controller = "Home", action = "Index", productPage = 1 });
+
+                endpoints.MapControllerRoute("page", "Page{page:int}",
+                new { Controller = "Home", action = "Index", page = 1 });
 
                 endpoints.MapControllerRoute("type", "{type}",
-                new { Controller = "Home", action = "Restaurants", productPage = 1 });
+                new { Controller = "Home", action = "Restaurants", page = 1 });
 
                 endpoints.MapControllerRoute("pagination",
-                "Products/Page{productPage}",
-                new { Controller = "Home", action = "Restaurants", productPage = 1 });
+                "Products/Page{page}",
+                new { Controller = "Home", action = "Restaurants", page = 1 });
 
+               
                 endpoints.MapRazorPages();
             });
             SeedData.EnsurePopulated(app);

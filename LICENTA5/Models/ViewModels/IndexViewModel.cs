@@ -9,5 +9,6 @@ namespace LICENTA5.Models.ViewModels
     {
         public List<Restaurant> RestaurantsList { get; set; }
         public string SearchTerm { get; set; }
+        public Restaurant RandomRestaurant { get; set; }
     }
 }

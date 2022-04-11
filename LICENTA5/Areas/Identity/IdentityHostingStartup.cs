@@ -15,6 +15,7 @@ namespace LICENTA5.Areas.Identity
     {
         public void Configure(IWebHostBuilder builder)
         {
+            
             builder.ConfigureServices((context, services) => {
                 services.AddDbContext<AuthDbContext>(options =>
                     options.UseSqlServer(

@@ -1,8 +1,18 @@
 ﻿@*@model System.Collections.Generic.List<LICENTA5.Models.Restaurant>*@
 
 @model IndexViewModel
-@*@{ViewData["Title"] = "Index";
-    }*@
+
+@inject IStoreRepository repository
+@{
+    var clicked = 0;
+
+    Random rand = new Random();
+    int toSkip = rand.Next(1, repository.Restaurants.Count());
+    Restaurant res = null;
+
+    res = repository.Restaurants.Skip(toSkip).Take(1).FirstOrDefault();
+
+}
 
 <section class="top-main">
     <div class="top-site-images">
@@ -12,27 +22,45 @@
         <div class="container">
             <div class="banner-wrapper" style="width:60%">
 
-
-                
-                   
-
-                    <form method="get" >
-                        <div class="input-group" >
-                            <input class="form-control" asp-for="@Model.SearchTerm">
-                            <div class="input-group-append" style="padding-bottom:20px" >
-                                <button class="btn btn-common" type="submit" style="padding:10px" ><i class="fa-solid fa-magnifying-glass"></i></button>
-                            </div>
+                <form method="get">
+                    <div class="input-group">
+                        <input class="form-control" asp-for="@Model.SearchTerm">
+                        <div class="input-group-append" style="padding-bottom:20px">
+                            <button class="btn btn-common" type="submit" style="padding:10px"><i class="fa-solid fa-magnifying-glass"></i></button>
                         </div>
-                    </form>
+                    </div>
+                </form>
 
-
-
-
-               
             </div>
         </div>
     </div>
 </section>
+<div class="row" style="padding-top:40px">
+
+    <h2 style="color:white" class="col-md-6">Don't know where to eat? Let us inspire you</h2>
+
+
+    @*<input asp-for="@Model.RandomRestaurant" type="button" class="btn btn-common" value="Random" />
+        <button name="btnRandom" value="randomRest" asp-action="YourReservations" asp-controller="Home">Random rest</button>*@
+    
+    @*<form method="get">
+      
+            <input class="form-control" type="button"  asp-for="@Model.RandomRestaurant" hidden>
+            <div class="input-group-append" style="padding-bottom:20px">
+                <button class="btn btn-common" type="submit" style="padding:10px">Get Random Restaurant</button>
+            </div>
+       
+    </form>*@
+</div>
+
+
+@if (Model.RandomRestaurant !=null) { 
+<partial name="RestaurantSummary" model="@Model.RandomRestaurant" />
+}
+    
+
+
+
 
 @if (Model.SearchTerm != null)
 {
@@ -113,3 +141,12 @@
     <h3>3. Complete the form with your desired date, people and hour. Click on CREATE button</h3>
     <h3>You're all done! You should be able to see your reservation and its details on My Reservations </h3>
 </div>
+<script>
+    $(document).ready(function () {
+        $("#btnRand").click(function () {
+            alert("clickee");
+            console.log("ceva")
+        });
+    });
+    
+</script>
