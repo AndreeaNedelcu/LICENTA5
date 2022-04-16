@@ -16,12 +16,16 @@
 
     <link href="~/css/main.css" rel="stylesheet" />
     <link href="~/css/rating.css" rel="stylesheet" />
+   
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">LOGO</a>
             <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img style="width:20%; height:10%; max-height:100%; max-width:100%" src="~/images/Logo/Logo.svg" /></a>
+
+                </div>
 
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -30,44 +34,44 @@
                 </button>
 
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1">
+                    <ul class="nav navbar-nav flex-grow-1 ">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link btn btn-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+             
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="AboutUs">About us</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Restaurants">Restaurants</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="YourReservations">My reservations</a>
-                        </li>
+            <li class="nav-item">
+                <a class="nav-link btn btn-link text-dark" asp-area="" asp-controller="Home" asp-action="AboutUs">About us</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link btn btn-link text-dark" asp-area="" asp-controller="Home" asp-action="Restaurants">Restaurants</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link btn btn-link text-dark" asp-area="" asp-controller="Home" asp-action="YourReservations">My reservations</a>
+            </li>
 
 
-                        @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-                        {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Manage
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                    <a class="dropdown-item" asp-controller="Administration"
-                                       asp-action="ListUsers">Users</a>
-                                    <a class="dropdown-item" asp-controller="Administration"
-                                       asp-action="ListRoles">Roles</a>
-                                </div>
-                            </li>
-                        }
-                    </ul>
+            @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+            {
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle nav-link btn btn-link text-dark" href="#" id="navbarDropdownMenuLink"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Manage
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item nav-link btn btn-link text-dark" asp-controller="Administration"
+                           asp-action="ListUsers">Users</a>
+                        <a class="dropdown-item nav-link btn btn-link text-dark" asp-controller="Administration"
+                           asp-action="ListRoles">Roles</a>
+                    </div>
+                </li>
+            }
+        </ul>
+                   
                     <partial name="_LoginPartial.cshtml" />
                 </div>
             </div>
         </nav>
     </header>
-
-    
 
 
 

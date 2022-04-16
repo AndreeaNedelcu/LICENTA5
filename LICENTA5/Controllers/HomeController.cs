@@ -166,13 +166,17 @@ e.Type == type).Count()
             foreach (var i in modelReservations.ToList())
             {
                 DateTime reservationRealDate = new DateTime(i.Date.Year, i.Date.Month, i.Date.Day, i.HourComing, currentDate.Minute, currentDate.Second);
+
+                var restaurant = repository.GetRestaurant((int)i.RestaurantId);
                 if (currentDate.AddHours(1) > reservationRealDate)
                 {
                    
-                        var restaurant = repository.GetRestaurant((int)i.RestaurantId);
+                       if(restaurant != null) {
                         restaurant.EmptySeats += i.NrPers;
                         repository.Update(restaurant);
                         repository.DeleteReservation(i.ReservationId);
+                    }
+                        
                     
                    
                 }

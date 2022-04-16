@@ -1,7 +1,12 @@
 ﻿@model Reservation
 @inject IStoreRepository repository
 @{
-    var photoPath = "../../images/" + (@repository.GetRestaurant((int)Model.RestaurantId).PhotoPath ?? "noimage.jpg");
+    var repoPhoto = @repository.GetRestaurant((int)Model.RestaurantId).PhotoPath ?? "noimage.jpg";
+    var photoPath = "noimage.jpg";
+    if (repoPhoto != null) {
+        photoPath = "../../images/" + (repoPhoto);
+    }
+
     var currentHour = ViewData["CurrentHourForPartial"];
     DateTime currentDate = (DateTime)ViewData["CurrentDateForPartial"];
     int result = DateTime.Compare(currentDate, Model.Date);
