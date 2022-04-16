@@ -98,6 +98,11 @@ namespace LICENTA5.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                   
+     //               var confirmationLink = Url.Action("ConfirmEmail", "Account",
+     //new { userId = user.Id, token = token }, Request.Scheme);
+
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl); 
                 }

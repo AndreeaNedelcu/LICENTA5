@@ -37,20 +37,20 @@
 </section>
 <div class="row" style="padding-top:40px">
 
-    <h2 style="color:white" class="col-md-6">Don't know where to eat? Let us inspire you</h2>
+    <h2 style="color:white" class="col-md-6">Don't know where to eat?</h2>
 
 
     @*<input asp-for="@Model.RandomRestaurant" type="button" class="btn btn-common" value="Random" />
         <button name="btnRandom" value="randomRest" asp-action="YourReservations" asp-controller="Home">Random rest</button>*@
     
-    @*<form method="get">
+    <form method="get">
       
-            <input class="form-control" type="button"  asp-for="@Model.RandomRestaurant" hidden>
+            <input class="form-control" name="button" type="button" value="@res"  asp-for="@Model.RandomRestaurant" hidden>
             <div class="input-group-append" style="padding-bottom:20px">
                 <button class="btn btn-common" type="submit" style="padding:10px">Get Random Restaurant</button>
             </div>
        
-    </form>*@
+    </form>
 </div>
 
 

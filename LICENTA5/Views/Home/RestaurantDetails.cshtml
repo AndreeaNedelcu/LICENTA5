@@ -113,20 +113,26 @@
                                     <div class="container d-flex justify-content-center mt-200">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <div class="stars"> 
+                                                <div class="stars">
                                                     @*<form asp-controller="home" asp-action="RestaurantDetails" method="post">*@
-                                                        <input class="star star-5" id="star-5" type="radio" name="star" value="5"  />
+                                                    @using (Html.BeginForm("RestaurantDetails", "Home", FormMethod.Post))
+                                                    {
+
+                                                        <input class="star star-5" id="star-5" type="radio" name="submit" value="5" />
                                                         <label id="label5" class="star star-5" for="star-5"></label>
-                                                        <input class="star star-4" id="star-4" type="radio" name="star" value="4" />
+                                                        <input class="star star-4" id="star-4" type="radio" name="submit" value="4" />
                                                         <label id="label4" class="star star-4" for="star-4"></label>
-                                                        <input class="star star-3" id="star-3" type="radio" name="star" value="3" />
-                                                        <label  id="label3" class="star star-3" for="star-3"></label>
-                                                        <input class="star star-2" id="star-2" type="radio" name="star" value="2" />
-                                                        <label  id="label2" class="star star-2" for="star-2"></label>
-                                                        <input class="star star-1" id="star-1" type="radio" name="star" value="1" />
+                                                        <input class="star star-3" id="star-3" type="radio" name="submit" value="3" />
+                                                        <label id="label3" class="star star-3" for="star-3"></label>
+                                                        <input class="star star-2" id="star-2" type="radio" name="submit" value="2" />
+                                                        <label id="label2" class="star star-2" for="star-2"></label>
+                                                        <input class="star star-1" id="star-1" type="radio" name="submit" value="1" />
                                                         <label id="label1" class="star star-1" for="star-1"></label>
-                                                    <button id="btnRate" onclick="rate()">Send rate</button>
+                                                    }
+
+                                                    <button type="submit" id="btnRate" onclick="rate()">Send rate</button>
                                                     @*</form>*@
+
                                                 </div>
                                             </div>
                                         </div>
@@ -184,20 +190,39 @@
         //});
         }
 
-        var stars5 = document.getElementById("star-5");
-        var stars4 = document.getElementById("star-4");
-        var stars3 = document.getElementById("star-3");
-        var stars2 = document.getElementById("star-2");
-        var stars1 = document.getElementById("star-1");
-        function rate() {
+        @*var btn5 = document.getElementById("star-5").onclick(function ()=> {
+            @repository.AddRating(new RestaurantRating { Rating = 5, RestaurantId = Model.Restaurant.RestaurantID })
+        });
+        var btn4 = document.getElementById("star-4").onclick(function ()=> {
+            @repository.AddRating(new RestaurantRating { Rating = 4, RestaurantId = Model.Restaurant.RestaurantID })
+        });
+        var btn3 = document.getElementById("star-3").onclick(function ()=> {
+            @repository.AddRating(new RestaurantRating { Rating = 3, RestaurantId = Model.Restaurant.RestaurantID })
+        });
+        var btn2 = document.getElementById("star-2").onclick(function ()=> {
+            @repository.AddRating(new RestaurantRating { Rating = 2, RestaurantId = Model.Restaurant.RestaurantID })
+        });
+        var btn1 = document.getElementById("star-1").onclick(function ()=> {
+            @repository.AddRating(new RestaurantRating { Rating = 1, RestaurantId = Model.Restaurant.RestaurantID })
+        });*@
+
+        //var stars5 = document.getElementById("star-5");
+        //var stars4 = document.getElementById("star-4");
+        //var stars3 = document.getElementById("star-3");
+        //var stars2 = document.getElementById("star-2");
+        //var stars1 = document.getElementById("star-1");
+        @*function rate() {
             if (stars5.checked == true) {
 
-                @*@repository.AddRating(new RestaurantRating { Rating = 5, RestaurantId = Model.Restaurant.RestaurantID });*@
+                @repository.AddRating(new RestaurantRating { Rating = 5, RestaurantId = Model.Restaurant.RestaurantID });
             }
             else if (stars4.checked == true) {
-                  @*@repository.AddRating(new RestaurantRating { Rating = 4, RestaurantId = Model.Restaurant.RestaurantID });*@
+                  @repository.AddRating(new RestaurantRating { Rating = 4, RestaurantId = Model.Restaurant.RestaurantID });
             }
-        }
+            else if (stars3.checked == true) {
+                @repository.AddRating(new RestaurantRating { Rating = 3, RestaurantId = Model.Restaurant.RestaurantID });
+            }
+        }*@
 
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=@(ViewData["MyKeyMaps"])&callback=initMap"

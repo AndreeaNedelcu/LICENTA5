@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using System.Web;
 
 namespace LICENTA5.Areas.Identity.Pages.Account
 {
@@ -47,13 +48,22 @@ namespace LICENTA5.Areas.Identity.Pages.Account
             if (DisplayConfirmAccountLink)
             {
                 var userId = await _userManager.GetUserIdAsync(user);
-                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                EmailConfirmationUrl = Url.Page(
-                    "/Home/ConfirmEmail",
-                    pageHandler: null,
-                    values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
-                    protocol: Request.Scheme);
+               // var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+               // token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+               var token = HttpUtility.UrlEncode( await _userManager.GenerateEmailConfirmationTokenAsync(user));
+
+                var confirmationLink = Url.Action("ConfirmEmail", "Home",
+    new { userId = user.Id, token = token }, Request.Scheme);
+              
+                //  var result = await _userManager.ConfirmEmailAsync(user, token);
+
+
+                //EmailConfirmationUrl = Url.Page(
+                //    "/Home/ConfirmEmail",
+                //    pageHandler: null,
+                //    values: new { area = "Identity", userId = userId, token = token, returnUrl = returnUrl },
+                //    protocol: Request.Scheme);
+                EmailConfirmationUrl = confirmationLink;
             }
 
             return Page();

@@ -109,13 +109,13 @@ namespace LICENTA5.Areas.Identity.Pages.Account
                     //_logger.Log(LogLevel.Warning, confirmLink);
                     _logger.LogInformation("User created a new account with password.");
 
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                    token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
                     var callbackUrl = Url.Page(
                         "/Home/ConfirmEmail",
                         pageHandler: null,
-                        values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
+                        values: new { area = "Identity", userId = user.Id, code = token, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
@@ -146,6 +146,6 @@ namespace LICENTA5.Areas.Identity.Pages.Account
 
             // If we got this far, something failed, redisplay form
             return Page();
-        }
+         }
     }
 }

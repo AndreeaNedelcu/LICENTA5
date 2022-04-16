@@ -18,7 +18,7 @@ namespace LICENTA5.Areas.Identity
             
             builder.ConfigureServices((context, services) => {
                 services.AddDbContext<AuthDbContext>(options =>
-                    options.UseSqlServer(
+                     options.UseSqlServer(
                         context.Configuration.GetConnectionString("AuthDbContextConnection")));
                
                 services.AddAuthentication().AddGoogle(options =>
@@ -36,8 +36,8 @@ namespace LICENTA5.Areas.Identity
 
                 services.AddDefaultIdentity<ApplicationUser>(options =>
                 {
-                    options.SignIn.RequireConfirmedAccount = false;
-                    options.SignIn.RequireConfirmedEmail = false;
+                    options.SignIn.RequireConfirmedAccount = true;
+                    options.SignIn.RequireConfirmedEmail = true;
                     options.Password.RequireUppercase = false;
                     options.Password.RequireLowercase = false;
 

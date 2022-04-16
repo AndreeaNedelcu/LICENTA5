@@ -38,8 +38,8 @@
     }
 
 
-    <div class="col-md-12">
-        <a asp-action="YourReservations" asp-route-sortOrder="@ViewData["DateSortParm"]">Order by date</a>
+    <div class="col-md-12" style="color:white">
+        <a style="color:white" asp-action="YourReservations" asp-route-sortOrder="@ViewData["DateSortParm"]">Order by date</a>
     </div>
 
     @foreach (var p in Model.Reservations)

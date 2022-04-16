@@ -11,6 +11,8 @@ namespace LICENTA5.Models.ViewModels
         public string PageTitle { get; set; }
 
         public List<GalleryModel> Gallery { get; set; }
+
+        public string SelectedRate { get; set; }
         public List<RestaurantRating> RestaurantRatings { get; set; }
         
     }

@@ -137,15 +137,9 @@ C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\Microsof
 C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Options.dll
 C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Primitives.dll
 C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\Microsoft.Identity.Client.dll
-C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.JsonWebTokens.dll
-C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Logging.dll
-C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Protocols.dll
-C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
-C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Tokens.dll
 C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\System.Collections.Immutable.dll
 C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\System.Configuration.ConfigurationManager.dll
 C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\System.Diagnostics.DiagnosticSource.dll
-C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\System.Runtime.Caching.dll
 C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\System.Security.Cryptography.ProtectedData.dll
 C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp2.1\Microsoft.Data.SqlClient.dll
@@ -235,3 +229,9 @@ C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\MailKit.
 C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\MimeKit.dll
 C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\NETCore.MailKit.dll
 C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\BouncyCastle.Crypto.dll
+C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Logging.dll
+C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Protocols.dll
+C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Tokens.dll
+C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\System.IdentityModel.Tokens.Jwt.dll

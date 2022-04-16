@@ -69,19 +69,9 @@ namespace LICENTA5.Controllers
 
             //5    res = repository.Restaurants.Skip(toSkip).Take(1).FirstOrDefault();
             IndexViewModel model = null;
-
-            if (randomRest == null)
-            {
-                 model = new IndexViewModel
-                {
-                    RestaurantsList = displaydata,
-                    SearchTerm = searchTerm
-
-
-                };
-            }
-            else
-            {
+            
+              
+           
                 model = new IndexViewModel
                 {
                     RestaurantsList = displaydata,
@@ -91,7 +81,7 @@ namespace LICENTA5.Controllers
 
 
                 };
-            }
+            
            
             return View(model);
         }
@@ -337,8 +327,16 @@ e.Type == type).Count()
 
         [HttpGet]
         [AllowAnonymous]
-        public ViewResult RestaurantDetails(int id)
+        public ViewResult RestaurantDetails(int id, string submit)
         {
+            List<RestaurantRating> RatingList = new List<RestaurantRating>();
+            RatingList.Add(new RestaurantRating { Rating = 1, RestaurantId = id });
+            RatingList.Add(new RestaurantRating { Rating = 2, RestaurantId = id });
+            RatingList.Add(new RestaurantRating { Rating = 3, RestaurantId = id });
+            RatingList.Add(new RestaurantRating { Rating = 4, RestaurantId = id });
+            RatingList.Add(new RestaurantRating { Rating = 5, RestaurantId = id });
+
+
             int Id = (int)id;
             Restaurant restaurant = repository.GetRestaurant(Id);
             if (restaurant == null)
@@ -369,6 +367,11 @@ e.Type == type).Count()
                 URL = g.URL
             }).ToList();
             restDetails.RestaurantRatings = repository.Ratings(id).ToList();
+
+            //if (submit.Equals("5"))
+            //{
+            //    repository.AddRating(new RestaurantRating { Rating = 5, RestaurantId = restaurant.RestaurantID });
+            //}
 
             ViewData["MyKeyMaps"] = "";
             return View(restDetails);
@@ -828,7 +831,7 @@ e.Type == type).Count()
         {
             if (userId == null || token == null)
             {
-                return RedirectToAction("index", "home");
+                return RedirectToAction("index", "Home");
             }
 
             var user = await _userManager.FindByIdAsync(userId);
@@ -848,7 +851,8 @@ e.Type == type).Count()
             return View("Error");
         }
 
-       
+      
+     
     }
 
 
