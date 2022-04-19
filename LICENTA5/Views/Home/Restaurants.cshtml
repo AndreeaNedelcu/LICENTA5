@@ -21,7 +21,11 @@
 <div class="containerRest">
     @foreach (var p in Model.Restaurants)
     {
-        <partial name="RestaurantSummary" model="p" />
+        if (p.Confirmed == true)
+        {
+            <partial name="RestaurantSummary" model="p" />
+        }
+
 
     }
 

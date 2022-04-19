@@ -1,0 +1,14 @@
+﻿@model IEnumerable<Reservation>
+
+
+
+@foreach(var reservation in Model)
+{
+<h1 style="color:white">@reservation.UserId</h1>
+
+<h1 style="color:white">@reservation.Date.ToShortDateString()</h1>
+<h1 style="color:white">@reservation.HourComing</h1>
+<h1 style="color:white">@reservation.NrPers</h1>
+<h2 style="color:white"> _____________________________________________________________</h2>
+
+}

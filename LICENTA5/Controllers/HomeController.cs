@@ -212,7 +212,7 @@ e.Type == type).Count()
 
 
         [HttpPost]
-        public IActionResult AddRestaurant(RestaurantCreateViewModel model)
+        public async Task<IActionResult> AddRestaurantAsync(RestaurantCreateViewModel model)
         {
             if (ModelState.IsValid)
             {if (model.Type == "0")
@@ -290,10 +290,22 @@ e.Type == type).Count()
                     closingHour = model.closingHour,
                     PhotoPath = uniqueFileName,
                     Latitude=lat,
-                    Longitude=lng
+                    Longitude=lng,
+                    
 
 
                 };
+                if(_signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                {
+                    newRest.Confirmed = true;
+                }
+                else
+                {
+                    newRest.Confirmed = false;
+                }
+                newRest.AddedBy = _userManager.GetUserName(User);
+                model.AddedBy = newRest.AddedBy;
+                model.Confirmed = newRest.Confirmed;
                 newRest.RestaurantGallery = new List<RestaurantGallery>();
                 if(model.Gallery != null)
                 {

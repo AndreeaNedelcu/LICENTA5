@@ -235,3 +235,6 @@ C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\Microsof
 C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Tokens.dll
 C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\obj\Debug\netcoreapp3.1\Razor\Views\Restaurant\NewRestaurantInfo.cshtml.g.cs
+C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\obj\Debug\netcoreapp3.1\Razor\Views\Administration\ListRequests.cshtml.g.cs
+C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\obj\Debug\netcoreapp3.1\Razor\Views\Restaurant\MyBusiness.cshtml.g.cs

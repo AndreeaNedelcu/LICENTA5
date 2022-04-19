@@ -156,5 +156,10 @@ namespace LICENTA5.Models
 
             return review;
         }
+
+        public IEnumerable<Reservation> GetReservationsAtRestaurant(long restaurantId)
+        {
+            return context.Reservations.Where(e => e.RestaurantId.Equals(restaurantId));
+        }
     }
 }

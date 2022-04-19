@@ -1,0 +1,9 @@
+﻿@*@model ListRequestsViewModel*@
+@model IQueryable<Restaurant>
+<h1 style="color:white"> Requests:</h1>
+
+@foreach(var restaurant in Model)
+{
+<h2>@restaurant.AddedBy</h2> 
+<partial name="RestaurantSummary" model="restaurant" />
+}

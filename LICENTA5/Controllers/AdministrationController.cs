@@ -279,6 +279,16 @@ namespace LICENTA5.Controllers
         }
 
        
+        public IActionResult ListRequests()
+        {
+            var restaurants = repository.Restaurants.Where(e => e.Confirmed==false);
+            var model = new ListRequestsViewModel
+            {
+                RestaurantsNotConfirmed = restaurants
+            };
+
+            return View(restaurants);
+        }
 
     }
 }

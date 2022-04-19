@@ -39,5 +39,8 @@ namespace LICENTA5.Models.ViewModels
         public IFormFileCollection GalleryFiles { get; set; }
 
         public List<GalleryModel> Gallery { get; set; }
+
+        public bool Confirmed { get; set; }
+        public string AddedBy { get; set; }
     }
 }

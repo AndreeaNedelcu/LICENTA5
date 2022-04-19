@@ -39,7 +39,10 @@ namespace LICENTA5.Models
         List<Reservation> ListOfReservations { get; set; }
         List<RestaurantRating> Ratings { get; set; }
 
+        public bool Confirmed { get; set; }
+        public string AddedBy { get; set; }
 
-        
+
+
     }
 }

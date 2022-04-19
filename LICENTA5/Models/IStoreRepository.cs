@@ -17,7 +17,8 @@ namespace LICENTA5.Models
 
         Reservation AddReservation(Reservation reservation);
         IEnumerable<Reservation> GetReservations(string userId);
-       Reservation GetReservation(string userId, int resId);
+        IEnumerable<Reservation> GetReservationsAtRestaurant(long restaurantId);
+        Reservation GetReservation(string userId, int resId);
         Reservation Update(Reservation reservationChanged, string userId);
 
         Reservation DeleteReservation(int id);
