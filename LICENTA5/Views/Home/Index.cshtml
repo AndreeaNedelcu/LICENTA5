@@ -35,29 +35,30 @@
         </div>
     </div>
 </section>
-<div  style="padding-top:40px">
+<div style="padding-top:40px">
 
-    <h2 style="color:white" class="col-md-6">Don't know where to eat?</h2>
+    @*<form method="get" >*@
 
-
-    @*<input asp-for="@Model.RandomRestaurant" type="button" class="btn btn-common" value="Random" />
-        <button name="btnRandom" value="randomRest" asp-action="YourReservations" asp-controller="Home">Random rest</button>*@
-
-    <form method="get">
-
-        <input class="form-control" name="button" type="button" value="@res" asp-for="@Model.RandomRestaurant" hidden>
-        <div class="input-group-append" style="padding-bottom:20px">
-            <button class="btn btn-common" type="submit" style="padding:10px">Get Random Restaurant</button>
-        </div>
+        @*<input class="form-control" name="button" type="button" value="@res" asp-for="@Model.RandomRestaurant" hidden>*@
+        <!--<div class="input-group-append" style="padding-bottom:20px">-->
+            @*<button class="btn btn-common" type="submit" style="padding:10px">Get Random Restaurant</button>*@
+        <!--</div>-->
 
 
-    </form>
+    @*</form>*@
 
-    <div class="container-buttons">
+    <button onclick="help()" class="btn btn-common">Help</button>
+
+    <div id="Text" style="display:none">
+        @*<li>Text that should be shown and hidden on Button click </li>*@
+        <partial name="RestaurantSummary" model="@Model.RandomRestaurant" />
+    </div>
+
+    <div class="container-buttons" >
         <div class="about-us">
             <div class="who-we-are">
-                
-               
+
+
             </div>
             <div class="cards" style="display:flex; justify-content: center; align-items: center;
     margin: 10px;
@@ -66,28 +67,28 @@
     padding-bottom: px;
     ">
 
-                <div class="card" style="width:250px; margin: 20px; background-color:transparent; color:white">
-                    <div class="card-img img1"></div>
+                <div class="card" style="width:250px; margin-right: 20px; background-color:transparent; color:white">
+                    
                     <div class="card-body">
-                       
+
                         <button class="btn btn-common" style="padding:10px"><i class="fa-solid fa-lightbulb fa-3x"></i></button>
-                         <span style="color:white"><b>RANDOM</b></span> 
-                         <p style="color:white">Trying new things is important! Let us choose a random restaurant for you.</p> 
+                        <span style="color:white"><b>RANDOM</b></span>
+                        <p style="color:white">Trying new things is important! Let us choose a random restaurant for you.</p>
                     </div>
                 </div>
 
 
                 <div class="card" style="width:250px;margin: 20px; background-color:transparent;color:white">
-                    <div class="card-img img2"></div>
+                 
                     <card class="card-body">
                         <button class="btn btn-common" style="padding:10px"><i class="fa-solid fa-location-crosshairs fa-3x"></i></button>
-                         <span style="color:white"><b>AT HAND</b> </span> 
-                         <p style="color:white">You do not always need to go too far for good food. Let's see the nearest restaurant for you.</p> 
+                        <span style="color:white"><b>AT HAND</b> </span>
+                        <p style="color:white">You do not always need to go too far for good food. Let's see the nearest restaurant for you.</p>
                     </card>
                 </div>
 
                 <div class="card" style="width:250px;margin: 20px; background-color:transparent;color:white">
-                    <div class="card-img img3"></div>
+                   
                     <card class="card-body">
                         <button class="btn btn-common" style="padding:10px"><i class="fa-solid fa-question fa-3x"></i></button>
                         <span style="color:white"><b>PREFERENCES</b></span>
@@ -95,21 +96,12 @@
                     </card>
                 </div>
 
-             
+
 
 
             </div>
         </div>
     </div>
-
-
-    @if (Model.RandomRestaurant != null)
-    {
-        <partial name="RestaurantSummary" model="@Model.RandomRestaurant" />
-    }
-
-
-
 
 
     @if (Model.SearchTerm != null)
@@ -199,4 +191,13 @@
             });
         });
 
+
+        function help() {
+            var x = document.getElementById("Text");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+        }
     </script>

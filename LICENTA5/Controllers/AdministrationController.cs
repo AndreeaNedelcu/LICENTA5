@@ -19,6 +19,7 @@ namespace LICENTA5.Controllers
         private readonly UserManager<ApplicationUser> userManager;
         private IStoreRepository repository;
 
+
         public AdministrationController(RoleManager<IdentityRole> roleManager,
             UserManager<ApplicationUser> userManager, IStoreRepository repo)
 
@@ -278,7 +279,7 @@ namespace LICENTA5.Controllers
             }
         }
 
-       
+       [HttpGet]
         public IActionResult ListRequests()
         {
             var restaurants = repository.Restaurants.Where(e => e.Confirmed==false);
@@ -290,5 +291,20 @@ namespace LICENTA5.Controllers
             return View(restaurants);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> ListRequestsAsync(int resId)
+        {
+            var toBeConfirmed = repository.GetRestaurant(resId);
+            toBeConfirmed.Confirmed = true;
+            var user = await userManager.FindByNameAsync(toBeConfirmed.AddedBy);
+            await userManager.AddToRoleAsync(user, "Business");
+
+            repository.Update(toBeConfirmed);
+
+            var restaurants = repository.Restaurants.Where(e => e.Confirmed == false);
+            
+
+            return View(restaurants);
+        }
     }
 }

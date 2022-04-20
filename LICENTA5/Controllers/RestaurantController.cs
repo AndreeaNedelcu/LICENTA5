@@ -39,7 +39,8 @@ namespace LICENTA5.Controllers
             var user = GetCurrentUserAsync();
             var restaurant = repository.Restaurants.Where(r => r.AddedBy.Equals(userName)).FirstOrDefault();
             var reservations = repository.GetReservationsAtRestaurant(restaurant.RestaurantID);
-            
+
+            ViewData["RestaurantName"] = restaurant.RestaurantName;
             return View(reservations);
         }
     }

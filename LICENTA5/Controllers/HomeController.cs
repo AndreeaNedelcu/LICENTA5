@@ -63,11 +63,11 @@ namespace LICENTA5.Controllers
         {
             var displaydata = repository.Search(searchTerm).ToList();
 
-            //Random rand = new Random();
-            //int toSkip = rand.Next(1, repository.Restaurants.Count());
-            //Restaurant res = null;
+            Random rand = new Random();
+            int toSkip = rand.Next(1, repository.Restaurants.Count());
+            Restaurant res = null;
 
-            //5    res = repository.Restaurants.Skip(toSkip).Take(1).FirstOrDefault();
+               res = repository.Restaurants.Skip(toSkip).Take(1).FirstOrDefault();
             IndexViewModel model = null;
             
               
@@ -76,7 +76,7 @@ namespace LICENTA5.Controllers
                 {
                     RestaurantsList = displaydata,
                     SearchTerm = searchTerm,
-                    RandomRestaurant=randomRest
+                    RandomRestaurant=res
 
 
 
@@ -389,7 +389,7 @@ e.Type == type).Count()
             //    repository.AddRating(new RestaurantRating { Rating = 5, RestaurantId = restaurant.RestaurantID });
             //}
 
-            ViewData["MyKeyMaps"] = "";
+            ViewData["MyKeyMaps"] = "AIzaSyDq_B5S5fvlG2VbaEYRDkG59Wc7pjs4ZbQ";
             return View(restDetails);
         }
 
@@ -451,6 +451,7 @@ e.Type == type).Count()
             model.Restaurant = repository.GetRestaurant(id);
             ViewBag.ReservationAt = model.Restaurant.RestaurantName;
             ViewBag.SeatsLeft = model.Restaurant.EmptySeats;
+            ViewBag.OpenHour = model.Restaurant.openHour;
             return View();
         }
 
@@ -725,22 +726,18 @@ e.Type == type).Count()
         {
             if (ModelState.IsValid)
             {
-              
+                //Request.Form["submit"]
+
+
                 model.Restaurant = repository.GetRestaurant(id);
                 Restaurant res = model.Restaurant;
-                //RestaurantReview review = new RestaurantReview
-                //{
-                //    PublishedDate = DateTime.Now,
-                //    Comment=model.Comment,
-                //    Rating=model.Rating
-                   
-                //};
+               
 
-               // repository.AddReview(review);
+               
                 return RedirectToAction("RestaurantDetails", new { id = res.RestaurantID });
             }
 
-            // return RedirectToAction("YourReservations", new { id = newReservation  });
+            
             return View();
         }
 

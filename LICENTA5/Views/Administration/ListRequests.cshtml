@@ -2,8 +2,23 @@
 @model IQueryable<Restaurant>
 <h1 style="color:white"> Requests:</h1>
 
+<br />
+<h3 style="color:white">After you accept a request, the user's account will become Business and clients will be able to see the restaurant</h3>
 @foreach(var restaurant in Model)
 {
-<h2>@restaurant.AddedBy</h2> 
-<partial name="RestaurantSummary" model="restaurant" />
+<form method="post">
+    <div class="card">
+        <div class="card-header">
+             <h2>@restaurant.AddedBy</h2>
+        </div>
+        <div class="card-body">
+             <partial name="RestaurantSummary" model="restaurant" />
+        </div>
+        <div class="card-footer" >
+              <input asp-route-resId="@restaurant.RestaurantID" type="submit"  value="Accept" class="btn btn-primary" style="width:auto" />
+               
+        </div>
+    </div>
+</form>
+
 }
