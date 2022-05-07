@@ -3,7 +3,8 @@
 @inject UserManager<ApplicationUser> userManager;
 @{
     var photoPath = "../../images/" + (Model.Restaurant.PhotoPath ?? "noimage.jpg");
-
+    var sumRates = 0;
+    var NumberOfRates = Model.RestaurantRatings.Count();
 }
 
 <h3 class=" row justify-content-center" style="color:white; text-decoration:solid">@Model.Restaurant.RestaurantName </h3>
@@ -78,16 +79,25 @@
 
                     <!-- Recent Posts widget -->
                     <div class="widget recent">
-                        <h5 class="widget-title">Recent Events</h5>
-                        <p>Sed tincidunt quam nisi, ac condimentum</p>
+                        <h5 class="widget-title">Info</h5>
+                        @*<p>Sed tincidunt quam nisi, ac condimentum</p>*@
+                        <br />
                         <ul class="posts-list">
+                            <li>
+                                
+                                <div class="widget-content">
+                                    <a style="color:white" href="#">Contact</a>
+                                    <span style="color:white">@Model.Restaurant.PhoneNo</span>
+                                </div>
+                                <div class="clearfix"></div>
+                            </li>
                             <li>
                                 <div class="widget-thumb">
                                     <a href="#"><img src="assets/img/blog/thumb1.jpg" alt="" /></a>
                                 </div>
-                                <div class="widget-content">
-                                    <a href="#">Rating</a>
-                                    <span>2016/01/21</span>
+                                <div class="widget-content" style="color:white">
+                                    <a>Rating</a>
+                                    <span>@ViewData["FinalRate"]</span>
                                 </div>
                                 <div class="clearfix"></div>
                             </li>
@@ -96,25 +106,18 @@
                                     <a href="#"><img src="assets/img/blog/thumb2.jpg" alt="" /></a>
                                 </div>
                                 <div class="widget-content">
-                                    <a href="#">Comments</a>
-                                    <span>2016/01/30</span>
+                                    <a style="color:white" href="#">Comments</a>
+                                    <span style="color:white">2016/01/30</span>
                                 </div>
                                 <div class="clearfix"></div>
                             </li>
-                            <li>
-                                @foreach (var item in Model.RestaurantRatings)
-                                {
-                                    <partial name="ShowReview" model="item" />
-                                }
 
-                            </li>
                             <li>
                                 <div class="widget-thumb">
-                                    <div class="container d-flex justify-content-center mt-200">
+                                    <div class="container d-flex justify-content-center mt-1">
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="stars">
-                                                    @*<form asp-controller="home" asp-action="RestaurantDetails" method="post">*@
                                                     @using (Html.BeginForm("RestaurantDetails", "Home", FormMethod.Post))
                                                     {
 
@@ -128,11 +131,11 @@
                                                         <label id="label2" class="star star-2" for="star-2"></label>
                                                         <input class="star star-1" id="star-1" type="radio" name="submit" value="1" />
                                                         <label id="label1" class="star star-1" for="star-1"></label>
-                                                   
 
-                                                    <button type="submit" id="btnRate">Send rate</button>
+                                                        // /Home
+                                                        <button type="submit" id="btnRate" class="btn btn-common">Send rate</button>
                                                     }
-                                                    @*</form>*@
+
 
                                                 </div>
                                             </div>
@@ -191,39 +194,6 @@
         //});
         }
 
-        @*var btn5 = document.getElementById("star-5").onclick(function ()=> {
-            @repository.AddRating(new RestaurantRating { Rating = 5, RestaurantId = Model.Restaurant.RestaurantID })
-        });
-        var btn4 = document.getElementById("star-4").onclick(function ()=> {
-            @repository.AddRating(new RestaurantRating { Rating = 4, RestaurantId = Model.Restaurant.RestaurantID })
-        });
-        var btn3 = document.getElementById("star-3").onclick(function ()=> {
-            @repository.AddRating(new RestaurantRating { Rating = 3, RestaurantId = Model.Restaurant.RestaurantID })
-        });
-        var btn2 = document.getElementById("star-2").onclick(function ()=> {
-            @repository.AddRating(new RestaurantRating { Rating = 2, RestaurantId = Model.Restaurant.RestaurantID })
-        });
-        var btn1 = document.getElementById("star-1").onclick(function ()=> {
-            @repository.AddRating(new RestaurantRating { Rating = 1, RestaurantId = Model.Restaurant.RestaurantID })
-        });*@
-
-        //var stars5 = document.getElementById("star-5");
-        //var stars4 = document.getElementById("star-4");
-        //var stars3 = document.getElementById("star-3");
-        //var stars2 = document.getElementById("star-2");
-        //var stars1 = document.getElementById("star-1");
-        @*function rate() {
-            if (stars5.checked == true) {
-
-                @repository.AddRating(new RestaurantRating { Rating = 5, RestaurantId = Model.Restaurant.RestaurantID });
-            }
-            else if (stars4.checked == true) {
-                  @repository.AddRating(new RestaurantRating { Rating = 4, RestaurantId = Model.Restaurant.RestaurantID });
-            }
-            else if (stars3.checked == true) {
-                @repository.AddRating(new RestaurantRating { Rating = 3, RestaurantId = Model.Restaurant.RestaurantID });
-            }
-        }*@
 
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=@(ViewData["MyKeyMaps"])&callback=initMap"

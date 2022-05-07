@@ -19,6 +19,42 @@ namespace LICENTA5.Migrations.StoreDb
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("LICENTA5.Models.GiftCard", b =>
+                {
+                    b.Property<int>("GiftCardID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CardValue")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReceiverEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SenderCVV")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SenderCardNo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SenderFullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("GiftCardID");
+
+                    b.ToTable("GiftCards");
+                });
+
             modelBuilder.Entity("LICENTA5.Models.Reservation", b =>
                 {
                     b.Property<int>("ReservationId")
@@ -73,6 +109,10 @@ namespace LICENTA5.Migrations.StoreDb
 
                     b.Property<float>("Longitude")
                         .HasColumnType("real");
+
+                    b.Property<string>("PhoneNo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhotoPath")
                         .HasColumnType("nvarchar(max)");

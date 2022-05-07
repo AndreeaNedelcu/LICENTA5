@@ -161,5 +161,14 @@ namespace LICENTA5.Models
         {
             return context.Reservations.Where(e => e.RestaurantId.Equals(restaurantId));
         }
+
+        public GiftCard AddGiftCard(GiftCard card)
+        {
+            context.GiftCards.Add(card);
+
+            context.SaveChanges();
+
+            return card;
+        }
     }
 }

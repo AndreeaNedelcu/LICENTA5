@@ -51,7 +51,7 @@ namespace LICENTA5
 
             //        services.AddIdentity<ApplicationUser, IdentityRole>()
             //.AddEntityFrameworkStores<AuthDbContext>();
-            
+
 
             services.AddScoped<IStoreRepository, EFStoreRepository>();
             services.AddScoped<SignInManager<ApplicationUser>, SignInManager<ApplicationUser>>();
@@ -99,9 +99,9 @@ new { Controller = "Home", action = "Index" });
                 endpoints.MapControllerRoute("type", "{type}",
                 new { Controller = "Home", action = "Restaurants", page = 1 });
 
-                endpoints.MapControllerRoute("pagination",
-                "Products/Page{page}",
-                new { Controller = "Home", action = "Restaurants", page = 1 });
+                //endpoints.MapControllerRoute("pagination",
+                //"Products/Page{page}",
+                //new { Controller = "Home", action = "Restaurants", page = 1 });
 
                
                 endpoints.MapRazorPages();

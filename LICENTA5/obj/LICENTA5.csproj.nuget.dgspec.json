@@ -52,6 +52,18 @@
               "target": "Package",
               "version": "[1.0.0, )"
             },
+            "GeoHelper": {
+              "target": "Package",
+              "version": "[1.0.2.9, )"
+            },
+            "MailKit": {
+              "target": "Package",
+              "version": "[3.2.0, )"
+            },
+            "MaxMind.GeoIP2": {
+              "target": "Package",
+              "version": "[3.3.0, )"
+            },
             "Microsoft.AspNetCore.Authentication.Facebook": {
               "target": "Package",
               "version": "[3.1.5, )"
@@ -108,9 +120,29 @@
               "target": "Package",
               "version": "[3.1.5, )"
             },
+            "MimeKit": {
+              "target": "Package",
+              "version": "[3.2.0, )"
+            },
             "NETCore.MailKit": {
               "target": "Package",
               "version": "[2.0.3, )"
+            },
+            "QRCoder": {
+              "target": "Package",
+              "version": "[1.4.3, )"
+            },
+            "QRCoderNetCore": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            },
+            "System.Drawing.Common": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "ZXing.Net.Bindings.Windows.Compatibility": {
+              "target": "Package",
+              "version": "[0.16.10, )"
             }
           },
           "imports": [

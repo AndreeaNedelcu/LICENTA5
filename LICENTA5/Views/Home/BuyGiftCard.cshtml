@@ -1,0 +1,146 @@
+﻿
+@model GiftCard
+@{
+    List<SelectListItem> values = new List<SelectListItem>();
+    values.Add(new SelectListItem() { Text = "100", Value = "100" });
+    values.Add(new SelectListItem() { Text = "150", Value = "150" });
+    values.Add(new SelectListItem() { Text = "200", Value = "200" });
+    values.Add(new SelectListItem() { Text = "250", Value = "250" });
+
+    DateTime now = DateTime.Now.AddDays(1);
+    string MinDate = null;
+    if (now.Month.ToString().Length.Equals(1))
+    {
+        if (now.Day.ToString().Length.Equals(1))
+        {
+            MinDate = now.Year + "-0" + now.Month + "-0" + now.Day;
+
+        }
+        else
+        {
+            MinDate = now.Year + "-0" + now.Month + "-" + now.Day;
+        }
+
+    }
+    else
+    {
+        if (now.Day.ToString().Length.Equals(1))
+        {
+            MinDate = now.Year + "-" + now.Month + "-0" + now.Day;
+
+        }
+        else
+        {
+            MinDate = now.Year + "-" + now.Month + "-" + now.Day;
+
+        }
+
+
+    }
+   
+
+}
+<div class="page-container">
+    <!-- Contact Form Section Start -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="contact-form text-center">
+                    <div class="section-title" style="color:white">
+                        <h2 style="color:white">GIFT CARD</h2>
+                        <p style="color:white">The card is valid for 6 months from the date it was issued</p>
+                    </div>
+                    <form role="form" id="resForm" data-toggle="validator" class="row shake" asp-controller="Home" asp-action="BuyGiftCard" method="post">
+                       
+                        <div class="col-md-6" style="color:white">
+                            
+                            <div class="form-group">
+                                <select class="form-control" id="resname" asp-for="CardValue" asp-items="@values"   placeholder="Card value" required data-error="Please choose the value for the card" >
+                                    <option value="">Please choose the value for the card</option>
+                                </select>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <div class="form-group">
+                                <input type="email" class="form-control" id="resemail" asp-for="ReceiverEmail" placeholder="Receiver email" required data-error="Please enter the receiver email" required>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="resphone" asp-for="SenderFullName" minlength="3" maxlength="40"  placeholder="Name on card"  required data-error="Please enter the name on the card" required>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6" style="color:white">
+                           
+                            <div class="form-group">
+                                <input type="number" id="datepicker" asp-for="SenderCardNo"  max="9999999999999999" minlength="13" maxlength="16" class="form-control" placeholder="Credit card number" required>
+                                <span asp-validation-for="SenderCardNo" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <input type="date" class="form-control" id="resseats" min="@MinDate" asp-for="ExpirationDate" placeholder="Credit card expiration date" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="number" class="form-control" id="resintruction" asp-for="SenderCVV" pattern="[0-9]{3}" min="100" max="999" placeholder="Credit card CVV" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <textarea id="resmessage" class="form-control" rows="5" asp-for="Message" placeholder="Message" data-error="Write your message" ></textarea>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <button type="submit" id="ressubmit" class="btn btn-common btn-sn" asp-controller="Home" asp-action="BuyGiftCard">Buy gift card</button>
+                            <div id="resmsgSubmit" class="h3 text-center hidden"></div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Contact Form Section End -->
+    <!-- Reservation Info Start -->
+    <div class="reservation">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <h3 style="color:white">How to use the gift card?</h3>
+                    <p class="text" >
+                        <ul style="color:white">
+                            <li>
+
+                                -> After you buy a credit card for a friend they will receive an email with the generated QR code, the value and the valability period.
+                                The card can be used at any of the partner restaurants.
+                            </li>
+                            <li>
+                              -> A reservation must be made through Flash Table and the card can be used by presenting the QR code at the restaurant.
+                            </li>
+                        </ul>
+                       
+                    </p>
+                    
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <h3 style="color:white">Frequent questions</h3>
+                    <div class="textwidget" style="color:white">
+                        <div class="contact-info-item">
+                            <div >Can I use the card for any product?</span></div>
+                            <div >-> The card can be used for every product sold in the choosen restaurant.</div>
+                        </div>
+                        <div class="contact-info-item">
+                            <div ><span>What happens if the total receipt exceeds the card value? </span> :</div>
+                            <div>-> If the total exceeds the card value you can pay with cash or card(depending on the available options at the restaurant)</div>
+                        </div>
+                        <div class="contact-info-item">
+                            <div ><span>Can I use the card on multiple reservations?</span> :</div>
+                            <div class="contact-value">-> If the total receipt does not reach the total value of the card, then it cannot be used on another reservation. The card can be used on a single reservation. </div>
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Reservation Info Start -->
+
+</div>

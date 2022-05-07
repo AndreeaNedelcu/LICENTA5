@@ -27,5 +27,6 @@ namespace LICENTA5.Models
         IEnumerable<RestaurantRating> Ratings(long restId);
 
         RestaurantRating AddRating(RestaurantRating review);
+        GiftCard AddGiftCard(GiftCard card);
     }
 }

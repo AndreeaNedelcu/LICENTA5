@@ -1,12 +1,24 @@
 ﻿@model Restaurant
 @inject SignInManager<ApplicationUser> signInManager;
+@inject IStoreRepository repository
 @{
     var photoPath = "../../images/" + (Model.PhotoPath ?? "noimage.jpg");
+
+    var Ratings = repository.Ratings(Model.RestaurantID);
+    var SumOfRates = 0;
+    foreach (var i in Ratings)
+    {
+        SumOfRates += i.Rating;
+    }
+    double finalRate = 0.0;
+    finalRate = (double)SumOfRates / Ratings.Count();
+   
+
 }
 
 
 <div class="page-container" style="padding:10px">
-    <div class="container" >
+    <div class="container">
         <div class="row">
             <!-- Left Menu -->
             <div class="col-md-12 col-sm-12 col-sx-12">
@@ -16,13 +28,23 @@
                     </div>
                     <div class="menu-right">
 
-                        <h4  style="color:black">  @Model.RestaurantName</h4>
+                        <h4 style="color:black">  @Model.RestaurantName</h4>
                         <div class="rating">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
+                            @for (var i = finalRate; i > 0; i--)
+                            {
+                                if (i > 0 && i < 1)
+                                {
+                                    <i class="fa-solid fa-star-half"></i>
+                                }
+                                else
+                                {
+                                    <i class="fa fa-star"></i>
+                                }
+
+
+                            }
+                          
+
                         </div>
                         <p style="color:black">@Model.Description</p>
                         <form id="@Model.RestaurantID" asp-page="/Reservations" method="post">
@@ -44,7 +66,7 @@
                                 {
 
                                     @*<a asp-controller="home" asp-action="EditRestaurant" asp-route-id="@Model.RestaurantID" class="btn btn-common m-1">Edit</a>
-            <a class="btn btn-common m-1">Delete</a>*@
+                                        <a class="btn btn-common m-1">Delete</a>*@
 
                                     <a asp-controller="Home" asp-action="DeleteRestaurant" asp-route-id="@Model.RestaurantID" class="btn btn-common m-1">Delete</a>
                                     <a class="btn btn-common" asp-action="EditRestaurant" asp-controller="Home" asp-route-id="@Model.RestaurantID">Edit</a>
@@ -52,17 +74,17 @@
 
                                 }
                             </div>
-                           
-                               
-                           
+
+
+
                         </form>
                     </div>
                     <div>
-                        
+
                     </div>
                 </div>
             </div>
-       
+
 
         </div>
     </div>
@@ -82,43 +104,43 @@
 
         </h4>
     </div>*@
-    @*<form id="@Model.RestaurantID" asp-page="/Reservations" method="post">
-        <input type="hidden" asp-for="RestaurantID" />
-        <input type="hidden" name="returnUrl"
-               value="@ViewContext.HttpContext.Request.PathAndQuery()" />*@
-        @*<span class="card-text p-1" style="color:white">
-            @Model.Description*@
-            
-            @*<a asp-controller="home" asp-action="addBooking" asp-route-id="@Model.RestaurantID" class="btn btn-common m-1">Book a table</a>
-            <a asp-controller="home" asp-action="RestaurantDetails" asp-route-id="@Model.RestaurantID" class="btn btn-common m-1">Details</a>*@
-            @*@if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))*@
-          @*{*@
+@*<form id="@Model.RestaurantID" asp-page="/Reservations" method="post">
+    <input type="hidden" asp-for="RestaurantID" />
+    <input type="hidden" name="returnUrl"
+           value="@ViewContext.HttpContext.Request.PathAndQuery()" />*@
+@*<span class="card-text p-1" style="color:white">
+    @Model.Description*@
 
-                @*<a asp-controller="home" asp-action="EditRestaurant" asp-route-id="@Model.RestaurantID" class="btn btn-common m-1">Edit</a>
-                    <a class="btn btn-common m-1">Delete</a>*@
+@*<a asp-controller="home" asp-action="addBooking" asp-route-id="@Model.RestaurantID" class="btn btn-common m-1">Book a table</a>
+    <a asp-controller="home" asp-action="RestaurantDetails" asp-route-id="@Model.RestaurantID" class="btn btn-common m-1">Details</a>*@
+@*@if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))*@
+@*{*@
 
-                @*<a asp-controller="Home" asp-action="DeleteRestaurant" asp-route-id="@Model.RestaurantID" class="btn btn-common m-1">Delete</a>
-                <a class="btn btn-common" asp-action="EditRestaurant" asp-controller="Home" asp-route-id="@Model.RestaurantID">Edit</a>*@
-               
-                
-                @*<form asp-action="DeleteRestaurant" asp-controller="Home" asp-route-id="@Model.RestaurantID" method="post">
+@*<a asp-controller="home" asp-action="EditRestaurant" asp-route-id="@Model.RestaurantID" class="btn btn-common m-1">Edit</a>
+    <a class="btn btn-common m-1">Delete</a>*@
+
+@*<a asp-controller="Home" asp-action="DeleteRestaurant" asp-route-id="@Model.RestaurantID" class="btn btn-common m-1">Delete</a>
+    <a class="btn btn-common" asp-action="EditRestaurant" asp-controller="Home" asp-route-id="@Model.RestaurantID">Edit</a>*@
 
 
-                        <span id="confirmDeleteSpan_@Model.RestaurantID" style="display:none">
-                            <span>Are you sure you want to delete?</span>
-                            <button type="submit" class="btn btn-danger">Yes</button>
-                            <a href="#" class="btn btn-primary"
-                               onclick="confirmDelete('@Model.RestaurantID', false)">No</a>
-                        </span>
+@*<form asp-action="DeleteRestaurant" asp-controller="Home" asp-route-id="@Model.RestaurantID" method="post">
 
-                        <span id="deleteSpan_@Model.RestaurantID">
-                            <a href="#" class="btn btn-danger"
-                               onclick="confirmDelete('@Model.RestaurantID', true)">Delete</a>
-                        </span>
-                    </form>*@
 
-          @*//  }*@
+        <span id="confirmDeleteSpan_@Model.RestaurantID" style="display:none">
+            <span>Are you sure you want to delete?</span>
+            <button type="submit" class="btn btn-danger">Yes</button>
+            <a href="#" class="btn btn-primary"
+               onclick="confirmDelete('@Model.RestaurantID', false)">No</a>
+        </span>
 
-        @*</span>
-    </form>
-</div>*@
+        <span id="deleteSpan_@Model.RestaurantID">
+            <a href="#" class="btn btn-danger"
+               onclick="confirmDelete('@Model.RestaurantID', true)">Delete</a>
+        </span>
+    </form>*@
+
+@*//  }*@
+
+@*</span>
+        </form>
+    </div>*@

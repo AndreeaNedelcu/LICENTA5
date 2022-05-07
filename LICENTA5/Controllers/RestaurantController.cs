@@ -38,9 +38,26 @@ namespace LICENTA5.Controllers
             var userName = _userManager.GetUserName(User);
             var user = GetCurrentUserAsync();
             var restaurant = repository.Restaurants.Where(r => r.AddedBy.Equals(userName)).FirstOrDefault();
-            var reservations = repository.GetReservationsAtRestaurant(restaurant.RestaurantID);
+            IEnumerable<Reservation> reservations = null;
+            try
+            {
+                reservations = repository.GetReservationsAtRestaurant(restaurant.RestaurantID);
+            }
+            catch(NullReferenceException ex ){
+                reservations = null;
+            }
 
+            DateTime currentDate = DateTime.Now;
+            int currentHour = currentDate.Hour;
+
+            ViewData["CurrentHour"] = currentHour;
             ViewData["RestaurantName"] = restaurant.RestaurantName;
+            ViewData["RestaurantOpen"] = restaurant.openHour;
+            ViewData["RestaurantClose"] = restaurant.closingHour;
+            ViewData["RestaurantDesc"] = restaurant.Description;
+            ViewData["RestaurantCapacity"] = restaurant.nrPersMax;
+            ViewData["RestaurantID"] = restaurant.RestaurantID;
+            
             return View(reservations);
         }
     }

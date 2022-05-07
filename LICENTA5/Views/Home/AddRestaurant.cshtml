@@ -12,6 +12,13 @@
         </div>
     </div>
     <div class="form-group row">
+        <label asp-for="PhoneNo" class="col-sm-2 col-form-label" style="color:white ; padding:10px"></label>
+        <div class="col-sm-10">
+            <input asp-for="PhoneNo" class="form-control" placeholder="Phone">
+            <span asp-validation-for="PhoneNo" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
         <label asp-for="Description" class="col-sm-2 col-form-label" style="color:white ; padding:10px"></label>
         <div class="col-sm-10">
             <input asp-for="Description" class="form-control" placeholder="Description">
@@ -56,21 +63,24 @@
         </div>
     </div>
     <div class="form-group row">
-        <label asp-for="Latitude" class="col-sm-2 col-form-label" style="color:white; padding:10px"></label>
-        <div class="col-sm-10">
-            <input asp-for="Latitude" class="form-control" placeholder="Latitude">
-            <span asp-validation-for="Latitude" class="text-danger"></span>
+        @*<label asp-for="Latitude" class="col-sm-2 col-form-label" style="color:white; padding:10px"></label>
+            <div class="col-sm-10">
+                <input asp-for="Latitude" class="form-control" placeholder="Latitude">
+                <span asp-validation-for="Latitude" class="text-danger"></span>
+
+            </div>*@
+        <div id="map" style="height:230px; width:100%" onclick="onMapClick()">
 
         </div>
     </div>
-    <div class="form-group row">
+    @*<div class="form-group row">
         <label asp-for="Longitude" class="col-sm-2 col-form-label" style="color:white; padding:10px"></label>
         <div class="col-sm-10">
             <input asp-for="Longitude" class="form-control" placeholder="Longitude">
             <span asp-validation-for="Longitude" class="text-danger"></span>
 
         </div>
-    </div>
+    </div>*@
     <div class="form-group row">
         <label style="color:white" asp-for="Photo" class="col-sm-2 col-form-label"></label>
         <div class="col-sm-10">
@@ -100,12 +110,50 @@
 
     @section Scripts {
         <script>
+           
+
             $(document).ready(function () {
                 $('.custom-file-input').on("change", function () {
                     var fileName = $(this).val().split("\\").pop();
                     $(this).next('.custom-file-label').html(fileName);
                 });
+
+
+              
             });
+
+          
+                var map;
+                function initMap() {
+                    var markedPlace = { lat: 44.4267674, lng: 26.1025384 };
+                    map = new google.maps.Map(document.getElementById('map'), {
+                        center: markedPlace,
+                        zoom: 20
+                    }
+                    );
+
+                    const marker = new google.maps.Marker({
+                        position: markedPlace,
+                        map: map,
+                    });
+                } 
+            function onMapClick() {
+                alert("clicked")
+
+                }
+
+            //function onMapClick(e) {
+            //    alert("Clicked " + e);
+            //    const marker = new google.maps.Marker({
+            //   position: markedPlace,
+            //   map: map,
+            //    });
+            //}
+
+            
+            
         </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=@(ViewData["MyKeyMaps"])&callback=initMap"
+                async defer></script>
     }
 </form>

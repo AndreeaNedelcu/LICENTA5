@@ -13,6 +13,10 @@ namespace LICENTA5.Models.ViewModels
         [Required]
         [MaxLength(50, ErrorMessage = "Name cannot exceed 50 characters")]
         public string RestaurantName { get; set; }
+        [Phone]
+        [Required]
+        [MaxLength(10, ErrorMessage = "Phone cannot exceed 10 characters")]
+        public string PhoneNo { get; set; }
         [Required]
         [MinLength(20, ErrorMessage = "Description should have more than 20 characters")]
         public string Description { get; set; }

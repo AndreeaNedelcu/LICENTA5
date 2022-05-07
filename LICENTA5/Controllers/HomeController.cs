@@ -17,6 +17,9 @@ using Microsoft.AspNetCore.Identity;
 using LICENTA5.Areas.Identity.Data;
 using System.Security.Claims;
 using LICENTA5.Areas.Identity.Pages.Account;
+using QRCoder;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace LICENTA5.Controllers
 {
@@ -47,7 +50,6 @@ namespace LICENTA5.Controllers
         }
 
 
- 
 
         [HttpGet]
         public async Task<string> GetCurrentUserId()
@@ -57,6 +59,30 @@ namespace LICENTA5.Controllers
         }
 
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
+
+        private double distance(double lat1, double lon1, double lat2, double lon2)
+        {
+            double theta = lon1 - lon2;
+            double dist = Math.Sin(deg2rad(lat1))
+                            * Math.Sin(deg2rad(lat2))
+                            + Math.Cos(deg2rad(lat1))
+                            * Math.Cos(deg2rad(lat2))
+                            * Math.Cos(deg2rad(theta));
+            dist = Math.Acos(dist);
+            dist = rad2deg(dist);
+            dist = dist * 60 * 1.1515;
+            return (dist);
+        }
+
+        private double deg2rad(double deg)
+        {
+            return (deg * Math.PI / 180.0);
+        }
+
+        private double rad2deg(double rad)
+        {
+            return (rad * 180.0 / Math.PI);
+        }
 
         [AllowAnonymous]
         public IActionResult Index(string? searchTerm, Restaurant? randomRest)
@@ -69,8 +95,8 @@ namespace LICENTA5.Controllers
 
                res = repository.Restaurants.Skip(toSkip).Take(1).FirstOrDefault();
             IndexViewModel model = null;
-            
-              
+
+           
            
                 model = new IndexViewModel
                 {
@@ -78,13 +104,25 @@ namespace LICENTA5.Controllers
                     SearchTerm = searchTerm,
                     RandomRestaurant=res
 
-
-
                 };
-            
-           
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                QRCodeGenerator qRCodeGenerator = new QRCodeGenerator();
+                QRCodeData qRCodeData = qRCodeGenerator.CreateQrCode("ceva", QRCodeGenerator.ECCLevel.Q);
+                QRCode qRCode = new QRCode(qRCodeData);
+                using (Bitmap bitmap = qRCode.GetGraphic(20))
+                {
+                    bitmap.Save(ms, ImageFormat.Png);
+                    ViewData["QRCODE"] = "data:image/png;base64," + Convert.ToBase64String(ms.ToArray());
+                }
+
+            }
+
+
             return View(model);
         }
+       
 
 
 
@@ -92,10 +130,11 @@ namespace LICENTA5.Controllers
         //[AllowAnonymous]
         //public async Task<IActionResult> Index(string? searchTerm)
         //{
-          
+
         //     var displaydata = repository.Search(searchTerm).ToList();
         //    return View();
         //}
+
         [AllowAnonymous]
         public IActionResult AboutUs()
         {
@@ -175,7 +214,7 @@ e.Type == type).Count()
                         restaurant.EmptySeats += i.NrPers;
                         repository.Update(restaurant);
                         repository.DeleteReservation(i.ReservationId);
-                    }
+                       }
                         
                     
                    
@@ -192,6 +231,7 @@ e.Type == type).Count()
                 }
             };
             
+            
             return View(model);
         }
 
@@ -206,7 +246,7 @@ e.Type == type).Count()
         [HttpGet]
         public ViewResult AddRestaurant()
         {
-
+            ViewData["MyKeyMaps"] = "AIzaSyDq_B5S5fvlG2VbaEYRDkG59Wc7pjs4ZbQ";
             return View();
         }
 
@@ -320,7 +360,7 @@ e.Type == type).Count()
                         });
                     }
                 }
-
+                ViewData["MyKeyMaps"] = "AIzaSyDq_B5S5fvlG2VbaEYRDkG59Wc7pjs4ZbQ";
                 repository.Add(newRest);
                 return RedirectToAction("Restaurants", new { id = newRest.RestaurantID });
             }
@@ -360,20 +400,23 @@ e.Type == type).Count()
                 Response.StatusCode = 404;
                 return View("RestaurantNotFound", Id);
             }
-            
+            var Ratings = repository.Ratings(restaurant.RestaurantID);
+            var SumOfRates = 0;
+            foreach (var i in Ratings)
+            {
+                SumOfRates += i.Rating;
+            }
+            double finalRate = 0.0;
+            finalRate = (double)SumOfRates / Ratings.Count();
+            ViewData["FinalRate"] = finalRate;
+
             RestaurantDetailsViewModel restDetails = new RestaurantDetailsViewModel()
             {
                 Restaurant = restaurant,
-                
 
             };
             restDetails.Gallery = new List<GalleryModel>();
-            //restDetails.Gallery = repository.GetRestaurant(Id).restaurantGallery.Select(g => new GalleryModel()
-            //{
-            //    Id = g.Id,
-            //    Name = g.Name,
-            //    URL = g.URL
-            //}).ToList();
+            
 
             restDetails.Gallery=repository.GetGallery(id).Select(g => new GalleryModel()
             {
@@ -460,15 +503,45 @@ e.Type == type).Count()
         [Authorize ]
         public ViewResult EditRestaurant(int id)
         {
+            var type = "";
+            
             Restaurant restaurant = repository.GetRestaurant(id);
            var Gal= repository.GetGallery((int)restaurant.RestaurantID);
-            
+
+            if (restaurant.Type == "American")
+            {
+                type = "0";
+            }
+            else if (restaurant.Type == "Italian")
+            {
+                type = "1";
+            }
+            else if (restaurant.Type == "Mixed")
+            {
+                type = "2";
+            }
+            else if (restaurant.Type == "Romanian")
+            {
+                type = "3";
+            }
+            else if (restaurant.Type == "Chineese")
+            {
+                type = "4";
+            }
+            else if (restaurant.Type == "Spanish")
+            {
+                type = "5";
+            }
+            else if (restaurant.Type == "Mexican")
+            {
+                type = "6";
+            }
             EditRestaurantViewModel editRestaurantViewModel = new EditRestaurantViewModel
             {
                 Id = (int)restaurant.RestaurantID,
                 RestaurantName = restaurant.RestaurantName,
                 Description = restaurant.Description,
-                Type = restaurant.Type,
+                Type = type,
                 nrPersMax = restaurant.nrPersMax,
                 EmptySeats=restaurant.nrPersMax,
                 openHour = restaurant.openHour,
@@ -704,6 +777,7 @@ e.Type == type).Count()
             string userId = await GetCurrentUserId();
             var reservation = repository.GetReservation(userId, id);
             var restaurant = repository.GetRestaurant((int)reservation.RestaurantId);
+            
 
             if (reservation == null)
             {
@@ -726,14 +800,21 @@ e.Type == type).Count()
         {
             if (ModelState.IsValid)
             {
-                //Request.Form["submit"]
-
-
                 model.Restaurant = repository.GetRestaurant(id);
                 Restaurant res = model.Restaurant;
-               
 
-               
+
+                int rate = Int16.Parse(Request.Form["submit"].First().ToString());
+                repository.AddRating(new RestaurantRating { Rating = rate, RestaurantId = model.Restaurant.RestaurantID });
+                
+                var Ratings = repository.Ratings(res.RestaurantID);
+                var SumOfRates = 0;
+                foreach(var i in Ratings)
+                {
+                    SumOfRates += i.Rating;
+                }
+                double finalRate = SumOfRates / Ratings.Count();
+                ViewData["FinalRate"] = finalRate;
                 return RedirectToAction("RestaurantDetails", new { id = res.RestaurantID });
             }
 
@@ -864,8 +945,58 @@ e.Type == type).Count()
             return View("Error");
         }
 
-      
-     
+       
+
+        [HttpGet]
+        public IActionResult BuyGiftCard()
+        {
+
+            return View();
+        }
+
+       
+
+        [HttpPost]
+        public IActionResult BuyGiftCard(GiftCard card)
+        {
+            if (ModelState.IsValid)
+            {
+                GiftCard giftCard = new GiftCard
+                {
+                    CardValue=card.CardValue,
+                    ReceiverEmail=card.ReceiverEmail,
+                    SenderFullName=card.SenderFullName,
+                    SenderCardNo=card.SenderCardNo,
+                    ExpirationDate=card.ExpirationDate,
+                    SenderCVV=card.SenderCVV,
+                    Message=card.Message
+                };
+                repository.AddGiftCard(card);
+
+                //QRCodeGenerator qRCodeGenerator = new QRCodeGenerator();
+                //QRCodeData qRCodeData = qRCodeGenerator.CreateQrCode(card.GiftCardID + card.Message, QRCodeGenerator.ECCLevel.Q);
+                //QRCode qRCode = new QRCode(qRCodeData);
+                //Bitmap bitmap = qRCode.GetGraphic(15);
+                //var bitmapBytes = ConvertBitmapToBytes(bitmap);
+                //ViewBag.QR = bitmapBytes; 
+
+                return RedirectToAction("GiftCardSuccess");
+            }
+            ViewBag.ErrorTitle = "Oops... Something went wrong";
+            ViewBag.ErrorMessage = "It seems like there was a problem with your data, try again.";
+            return RedirectToAction("Error");
+        }
+
+
+        public IActionResult GiftCardSuccess()
+        {
+
+            return View();
+        }
+
+
+
+
     }
 
 

@@ -8,7 +8,7 @@
     var user = await UserManager.GetUserAsync(User);
     
     List<SelectListItem> hours = new List<SelectListItem>();
-    for (var i = ViewBag.OpenHour; i <=24; i++)
+    for (var i = ViewBag.OpenHour; i <24; i++)
     {
         hours.Add(new SelectListItem() {Text=i.ToString(),Value=i.ToString() });
     }
