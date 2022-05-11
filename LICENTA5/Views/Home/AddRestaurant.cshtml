@@ -1,6 +1,9 @@
 ﻿@model RestaurantCreateViewModel
 
-@{ ViewBag.Title = "Add a new restaurant";}
+@{ ViewBag.Title = "Add a new restaurant";
+    float lat = 0;
+    float lon = 0;
+    }
 
 <form enctype="multipart/form-data" asp-controller="home" asp-action="AddRestaurant" method="post" class="mt-3">
 
@@ -62,25 +65,28 @@
 
         </div>
     </div>
-    <div class="form-group row">
-        @*<label asp-for="Latitude" class="col-sm-2 col-form-label" style="color:white; padding:10px"></label>
+    <div  class="form-group row">
+        <label asp-for="Latitude" class="col-sm-2 col-form-label" style="color:white; padding:10px"></label>
             <div class="col-sm-10">
-                <input asp-for="Latitude" class="form-control" placeholder="Latitude">
+                <input  asp-for="Latitude" class="form-control"  placeholder="Latitude">
                 <span asp-validation-for="Latitude" class="text-danger"></span>
 
+            </div>
+        @*<div id="map" style="height:230px; width:100%" onclick="onMapClick()">
+
             </div>*@
-        <div id="map" style="height:230px; width:100%" onclick="onMapClick()">
 
-        </div>
+        @*<span> Loc</span>
+        <input type="text" id="txtPlaces" required />*@
     </div>
-    @*<div class="form-group row">
-        <label asp-for="Longitude" class="col-sm-2 col-form-label" style="color:white; padding:10px"></label>
-        <div class="col-sm-10">
-            <input asp-for="Longitude" class="form-control" placeholder="Longitude">
-            <span asp-validation-for="Longitude" class="text-danger"></span>
+    <div   class="form-group row">
+            <label asp-for="Longitude" class="col-sm-2 col-form-label" style="color:white; padding:10px"></label>
+            <div class="col-sm-10">
+                <input asp-for="Longitude" class="form-control"  placeholder="Longitude">
+                <span asp-validation-for="Longitude" class="text-danger"></span>
 
+            </div>
         </div>
-    </div>*@
     <div class="form-group row">
         <label style="color:white" asp-for="Photo" class="col-sm-2 col-form-label"></label>
         <div class="col-sm-10">
@@ -109,8 +115,10 @@
     </div>
 
     @section Scripts {
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=places&key=AIzaSyDq_B5S5fvlG2VbaEYRDkG59Wc7pjs4ZbQ"></script>
+
         <script>
-           
+
 
             $(document).ready(function () {
                 $('.custom-file-input').on("change", function () {
@@ -119,41 +127,51 @@
                 });
 
 
-              
+
             });
 
-          
-                var map;
-                function initMap() {
-                    var markedPlace = { lat: 44.4267674, lng: 26.1025384 };
-                    map = new google.maps.Map(document.getElementById('map'), {
-                        center: markedPlace,
-                        zoom: 20
-                    }
-                    );
 
-                    const marker = new google.maps.Marker({
-                        position: markedPlace,
-                        map: map,
-                    });
-                } 
-            function onMapClick() {
-                alert("clicked")
+            //var map;
+            //function initMap() {
+            //    var markedPlace = { lat: 44.4267674, lng: 26.1025384 };
+            //    map = new google.maps.Map(document.getElementById('map'), {
+            //        center: markedPlace,
+            //        zoom: 20
+            //    }
+            //    );
 
-                }
-
-            //function onMapClick(e) {
-            //    alert("Clicked " + e);
             //    const marker = new google.maps.Marker({
-            //   position: markedPlace,
-            //   map: map,
+            //        position: markedPlace,
+            //        map: map,
             //    });
             //}
+          
 
-            
-            
+            google.maps.event.addDomListener(window, 'load', function () {
+                var places = new google.maps.places.Autocomplete(document.getElementById('txtPlaces'));
+                google.maps.event.addListener(places, 'place_changed', function () {
+                    var place = places.getPlace();
+                    var address = place.formatted_address;
+                    var latitude = place.geometry.location.lat();
+                    var longitude = place.geometry.location.lng();
+                   
+
+                    //var mesg = "Address: " + address;
+                    //mesg += "\nLatitude: " + latitude;
+                    //mesg += "\nLongitude: " + longitude;
+                    //alert(mesg);
+                   
+                   
+
+
+
+                });
+            });
+
+
         </script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=@(ViewData["MyKeyMaps"])&callback=initMap"
-                async defer></script>
+        @*<script src="https://maps.googleapis.com/maps/api/js?key=@(ViewData["MyKeyMaps"])&callback=initMap"
+            async defer></script>*@
+
     }
 </form>

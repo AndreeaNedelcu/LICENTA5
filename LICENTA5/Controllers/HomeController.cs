@@ -20,12 +20,17 @@ using LICENTA5.Areas.Identity.Pages.Account;
 using QRCoder;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Net.Mail;
+using System.Net;
+using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace LICENTA5.Controllers
 {
    [Authorize]
     public class HomeController : Controller
     {
+        private readonly HttpClient _httpClient;
         private readonly UserManager<ApplicationUser> _userManager;
         private IStoreRepository repository;
         private readonly IHostingEnvironment hostingEnvironment;
@@ -47,6 +52,10 @@ namespace LICENTA5.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
             _logger2 = logger2;
+            _httpClient = new HttpClient()
+            {
+                Timeout = TimeSpan.FromSeconds(5)
+            };
         }
 
 
@@ -85,7 +94,7 @@ namespace LICENTA5.Controllers
         }
 
         [AllowAnonymous]
-        public IActionResult Index(string? searchTerm, Restaurant? randomRest)
+        public async Task<IActionResult> IndexAsync(string? searchTerm)
         {
             var displaydata = repository.Search(searchTerm).ToList();
 
@@ -96,46 +105,60 @@ namespace LICENTA5.Controllers
                res = repository.Restaurants.Skip(toSkip).Take(1).FirstOrDefault();
             IndexViewModel model = null;
 
-           
-           
-                model = new IndexViewModel
-                {
-                    RestaurantsList = displaydata,
-                    SearchTerm = searchTerm,
-                    RandomRestaurant=res
-
-                };
-
-            using (MemoryStream ms = new MemoryStream())
+            GeoInfoProvider geoInfoProvider = new GeoInfoProvider();
+            var ipAddress = await geoInfoProvider.GetIPAddress();
+            var response = await _httpClient.GetAsync($"http://api.ipstack.com/" + ipAddress + "?access_key=181601ebb5b10caa7cac2b391e8a23e7");
+            var locatioNinfo = new GeoInfoViewModel();
+            if (response.IsSuccessStatusCode)
             {
-                QRCodeGenerator qRCodeGenerator = new QRCodeGenerator();
-                QRCodeData qRCodeData = qRCodeGenerator.CreateQrCode("ceva", QRCodeGenerator.ECCLevel.Q);
-                QRCode qRCode = new QRCode(qRCodeData);
-                using (Bitmap bitmap = qRCode.GetGraphic(20))
-                {
-                    bitmap.Save(ms, ImageFormat.Png);
-                    ViewData["QRCODE"] = "data:image/png;base64," + Convert.ToBase64String(ms.ToArray());
-                }
+                var json = await response.Content.ReadAsStringAsync();
+               
+                locatioNinfo = JsonConvert.DeserializeObject<GeoInfoViewModel>(json);
 
+               
+            }
+            var latitude =Decimal.ToDouble( locatioNinfo.Latitude);
+            double longitud = Double.Parse( locatioNinfo.Longitude);
+            var restaurants = repository.Restaurants;
+            var minDistance = 9999.999;
+            var closestRestaurant = new Restaurant();
+            foreach(var restaurant in restaurants)
+            {
+                var dist = distance(latitude, longitud, restaurant.Latitude, restaurant.Longitude);
+                if (dist < minDistance)
+                {
+                    minDistance = dist;
+                    closestRestaurant = restaurant;
+                }
             }
 
+            var maxReservations = 0;
+            var mostPopularRestaurant = new Restaurant();
+            foreach(var restaurant in restaurants)
+            {
+                var noOfReservations = repository.GetReservationsAtRestaurant(restaurant.RestaurantID).Count();
+                if(noOfReservations> maxReservations)
+                {
+                    maxReservations = noOfReservations;
+                    mostPopularRestaurant = restaurant;
+                }
+            }
+            model = new IndexViewModel
+            {
+                RestaurantsList = displaydata,
+                SearchTerm = searchTerm,
+                RandomRestaurant = res,
+                NearestRestaurant = closestRestaurant,
+                MostPopularRestaurant=mostPopularRestaurant
 
+                };
+            ViewBag.lat = latitude;
             return View(model);
         }
        
 
-
-
-        //[HttpGet]
-        //[AllowAnonymous]
-        //public async Task<IActionResult> Index(string? searchTerm)
-        //{
-
-        //     var displaydata = repository.Search(searchTerm).ToList();
-        //    return View();
-        //}
-
         [AllowAnonymous]
+       
         public IActionResult AboutUs()
         {
             return View();
@@ -166,7 +189,6 @@ e.Type == type).Count()
             return View();
         }
 
-      
         [Authorize]
         public async Task<IActionResult> YourReservationsAsync(string? sortOrder, int page=1)
         {
@@ -254,6 +276,7 @@ e.Type == type).Count()
         [HttpPost]
         public async Task<IActionResult> AddRestaurantAsync(RestaurantCreateViewModel model)
         {
+            
             if (ModelState.IsValid)
             {if (model.Type == "0")
                     model.Type = "American";
@@ -310,15 +333,17 @@ e.Type == type).Count()
                 {
                      lat = model.Latitude;
                      lng = model.Longitude;
+                    
 
                 }
+              
                 else
                 {
                      lat = 44.4267674f;
                      lng = 26.1025384f;
                 }
 
-
+              
                 Restaurant newRest = new Restaurant
                 {
                     RestaurantName = model.RestaurantName,
@@ -331,6 +356,7 @@ e.Type == type).Count()
                     PhotoPath = uniqueFileName,
                     Latitude=lat,
                     Longitude=lng,
+                    PhoneNo=model.PhoneNo
                     
 
 
@@ -483,14 +509,34 @@ e.Type == type).Count()
                     ViewBag.ErrorMessage = "We are very sorry for the inconvenience, but there are not enough seats for your reservation. Try to go back and see how many seats are left";
                     return View("Error");
                 }
+                if (newReservation.Date.ToShortDateString().Equals(DateTime.Now.ToShortDateString()) &&  newReservation.HourComing <= DateTime.Now.Hour)
+                {
+                    ViewBag.ErrorTitle = "Oops...";
+                    ViewBag.ErrorMessage = "We are very sorry for the inconvenience, but it seems that the hour of your reservation is not valid for that date";
+                    return View("Error");
+                }
+                if (newReservation.Date.ToShortDateString().Equals(DateTime.Now.ToShortDateString()) && newReservation.HourComing <= DateTime.Now.AddHours(2).Hour)
+                {
+                    ViewBag.ErrorTitle = "Oops...";
+                    ViewBag.ErrorMessage = "We are very sorry for the inconvenience, but you have 2 make a reservation with at least 2 hours before";
+                    return View("Error");
+                }
+                var currentUserReservations = repository.GetReservations(await GetCurrentUserId());
+                foreach(var res in currentUserReservations)
+                {
+                    if (newReservation.Date.ToShortDateString().Equals(res.Date.ToShortDateString()) && (newReservation.HourComing.Equals(res.HourComing) || newReservation.HourComing<res.HourComing+2))
+                    {
+                        ViewBag.ErrorTitle = "Multiple reservations at the same time";
+                        ViewBag.ErrorMessage = "It seems that you already have a reservation on the specified date and hour. Try a different hour";
+                        return View("Error");
+                    }
+                }
 
-                
                 ViewBag.Restaurant = model.Restaurant;
                 repository.AddReservation(newReservation);
                 return RedirectToAction("YourReservations", new { id = newReservation.ReservationId });
             }
-
-           
+      
             model.Restaurant = repository.GetRestaurant(id);
             ViewBag.ReservationAt = model.Restaurant.RestaurantName;
             ViewBag.SeatsLeft = model.Restaurant.EmptySeats;
@@ -979,6 +1025,57 @@ e.Type == type).Count()
                 //Bitmap bitmap = qRCode.GetGraphic(15);
                 //var bitmapBytes = ConvertBitmapToBytes(bitmap);
                 //ViewBag.QR = bitmapBytes; 
+
+                using (MailMessage mm = new MailMessage("flashtable0@gmail.com", card.ReceiverEmail))
+                {
+                    mm.Subject = "Flash Table Gift Card";
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        QRCodeGenerator qRCodeGenerator = new QRCodeGenerator();
+                        QRCodeData qRCodeData = qRCodeGenerator.CreateQrCode(card.GiftCardID+card.SenderFullName, QRCodeGenerator.ECCLevel.Q);
+                        QRCode qRCode = new QRCode(qRCodeData);
+                        using (Bitmap bitmap = qRCode.GetGraphic(20))
+                        {
+                            bitmap.Save(ms, ImageFormat.Png);
+                            //  bitmap.Save("qrinitial", ImageFormat.Png);
+                            bitmap.Save("qrinitial3", ImageFormat.Jpeg);
+                           // ViewData["QRCODE"] = "data:image/png;base64," + Convert.ToBase64String(ms.ToArray());
+                            // mm.Body = "data:image/png;base64," + Convert.ToBase64String(ms.ToArray());
+                        }
+
+                        string filename = Path.GetFileName("qrinitial3");
+                        mm.Attachments.Add(new Attachment(ms, filename));
+
+
+                        bool hasMessage = false;
+                        if (card.Message != null)
+                        {
+                            mm.Body = "Your friend " + card.SenderFullName + " sent you a gift card.\n" + "You also have the following message: " + card.Message + "\nThe value of the gift card is " + card.CardValue +
+                                " and it is valid between " + DateTime.Now.ToShortDateString()
+                           + "-" + DateTime.Now.AddMonths(6).ToShortDateString() + "\nWe are looking forward to meet you in one of our partner restaurants!";
+                        }
+                        else
+                        {
+                            mm.Body = "Your friend " + card.SenderFullName + "sent you a gift card. \n The value of the gift card is " + card.CardValue + "and it is valid between " + DateTime.Now.ToShortDateString()
+                           + "-" + DateTime.Now.AddMonths(6).ToShortDateString() + "\nWe are looking forward to meet you in one of our partner restaurants!";
+                        }
+
+
+                        mm.IsBodyHtml = false;
+                        using (SmtpClient smtp = new SmtpClient())
+                        {
+                            smtp.Host = "smtp.gmail.com";
+                            smtp.EnableSsl = true;
+                            NetworkCredential credentials = new NetworkCredential("flashtable0@gmail.com", "Fecioara27");
+                            smtp.UseDefaultCredentials = true;
+                            smtp.Credentials = credentials;
+                            smtp.Port = 587;
+                            smtp.Send(mm);
+
+                        }
+                    }
+                   
+                }
 
                 return RedirectToAction("GiftCardSuccess");
             }

@@ -16,7 +16,6 @@ namespace LICENTA5.Models.ViewModels
         
         public int NrPers { get; set; }
         [Required]
-
         public int HourComing { get; set; } //2h
         [Required]
        [DateValidation]

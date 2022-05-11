@@ -33,8 +33,9 @@ namespace LICENTA5.Controllers
         }
 
 
-        public IActionResult MyBusiness()
-        {
+        public IActionResult MyBusiness(string? sortOrder, string? filterParameter)
+        {           
+
             var userName = _userManager.GetUserName(User);
             var user = GetCurrentUserAsync();
             var restaurant = repository.Restaurants.Where(r => r.AddedBy.Equals(userName)).FirstOrDefault();
@@ -45,6 +46,26 @@ namespace LICENTA5.Controllers
             }
             catch(NullReferenceException ex ){
                 reservations = null;
+            }
+
+
+            switch (sortOrder)
+            {
+                case "Recent":
+                    reservations = reservations.OrderByDescending(s => s.Date);
+                    break;
+                case "Oldest":
+                    reservations = reservations.OrderBy(s => s.Date);
+                    break;
+                
+                default:
+                    reservations = reservations.OrderBy(s => s.ReservationId);
+                    break;
+            }
+
+            if (!String.IsNullOrEmpty(filterParameter))
+            {
+                reservations = reservations.Where(f => f.Date.ToShortDateString().Equals(DateTime.Now.ToShortDateString()));
             }
 
             DateTime currentDate = DateTime.Now;

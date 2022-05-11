@@ -14,6 +14,7 @@
 
 }
 
+
 <section class="top-main">
     <div class="top-site-images">
         <img src="~/images/header1.jpg" alt="">
@@ -50,10 +51,7 @@
         }
     }
 
-    @if (ViewData["QRCODE"] != null)
-    {
-        <img src="@ViewData["QRCODE"]" style="width:200px" />
-    }
+ 
 
 
 
@@ -83,26 +81,10 @@
 
 
 
-
-                <div class="modal fade" id="myModal" role="dialog" style="width:100%">
-                    <div class="modal-dialog">
-                        <div class="card">
-                            <div class="text-right cross"> <i class="fa fa-times"></i> </div>
-                            <div class="card-body text-center">
-
-                                <partial name="RestaurantSummary" model="@Model.RandomRestaurant" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-
-
                 <div class="card" style="width:250px;margin: 20px; background-color:transparent;color:white">
 
                     <card class="card-body">
-                        <button class="btn btn-common" style="padding:10px" data-toggle="modal" data-target="#myModal"><i class="fa-solid fa-location-crosshairs fa-3x"></i></button>
+                        <a href="https://localhost:44354/home/RestaurantDetails/@Model.NearestRestaurant.RestaurantID" class="btn btn-common" style="padding:10px" ><i class="fa-solid fa-location-crosshairs fa-3x"></i></a>
                         <span style="color:white"><b>AT HAND</b> </span>
                         <p style="color:white">You do not always need to go too far for good food. Let's see the nearest restaurant for you.</p>
                     </card>
@@ -111,9 +93,9 @@
                 <div class="card" style="width:250px;margin: 20px; background-color:transparent;color:white">
 
                     <card class="card-body">
-                        <button class="btn btn-common" style="padding:10px"><i class="fa-solid fa-question fa-3x"></i></button>
-                        <span style="color:white"><b>PREFERENCES</b></span>
-                        <p style="color:white">Answer a few questions and we will give you the best option for today.</p>
+                        <a href="https://localhost:44354/home/RestaurantDetails/@Model.MostPopularRestaurant.RestaurantID" class="btn btn-common" style="padding:10px"><i class="fa-solid fa-fire fa-3x"></i></a>
+                        <span style="color:white"><b>POPULAR</b></span>
+                        <p style="color:white">Have the best client exeprience at one of our most popular restaurant amoung users</p>
                     </card>
                 </div>
 
@@ -124,12 +106,6 @@
         </div>
     </div>
 
-
-
-
-    <div id="Text" style="display:none">
-        <partial name="RestaurantSummary" model="@Model.RandomRestaurant" />
-    </div>
 
     <div class="row">
         <div class="col-md-12 col-xs-6 justify-content-center " style="color:white">
@@ -253,57 +229,27 @@
                 </div>
             </div>
         </div>
-        <button onclick="getLocation()">Get your Location</button>
-        <div id="mapholder"></div>
+        @*<div id="mapholder"></div>*@
 
 
     </div>
     <div class="instructions" style="color:white">
         <h1>Need help? Making a reservation at ... is very easy!</h1>
+        <br />
         <h3>1. Go to Restaurants section and pick your favourite</h3>
+        <br />
+
         <h3>2. Click on Book table button</h3>
+        <br />
         <h3>3. Complete the form with your desired date, people and hour. Click on CREATE button</h3>
+        <br />
+
         <h3>You're all done! You should be able to see your reservation and its details on My Reservations </h3>
 
     </div>
 
     <script>
-        function help() {
-            var x = document.getElementById("Text");
-            if (x.style.display === "none") {
-                x.style.display = "block";
-            } else {
-                x.style.display = "none";
-            }
-        }
-
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition, showError);
-            }
-            else { x.innerHTML = "Geolocation is not supported by this browser."; }
-        }
-        function showPosition(position) {
-            var latlondata = position.coords.latitude + "," + position.coords.longitude;
-            var latlon = "Your Latitude Position is:=" + position.coords.latitude + "," + "Your Longitude Position is:=" + position.coords.longitude;
-            alert(latlon)
-
-
-        }
-        function showError(error) {
-            if (error.code == 1) {
-                x.innerHTML = "User denied the request for Geolocation."
-            }
-            else if (err.code == 2) {
-                x.innerHTML = "Location information is unavailable."
-            }
-            else if (err.code == 3) {
-                x.innerHTML = "The request to get user location timed out."
-            }
-            else {
-                x.innerHTML = "An unknown error occurred."
-                 }
-        }
+     
 
 
 

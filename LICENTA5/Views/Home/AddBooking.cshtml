@@ -6,11 +6,44 @@
 @{
     ViewBag.Title = "Create reservation";
     var user = await UserManager.GetUserAsync(User);
-    
+
     List<SelectListItem> hours = new List<SelectListItem>();
     for (var i = ViewBag.OpenHour; i <24; i++)
     {
         hours.Add(new SelectListItem() {Text=i.ToString(),Value=i.ToString() });
+    }
+
+    var currentHour = DateTime.Now.Hour;
+
+    DateTime now = DateTime.Now;
+    string MinDate = null;
+    if (now.Month.ToString().Length.Equals(1))
+    {
+        if (now.Day.ToString().Length.Equals(1))
+        {
+            MinDate = now.Year + "-0" + now.Month + "-0" + now.Day;
+
+        }
+        else
+        {
+            MinDate = now.Year + "-0" + now.Month + "-" + now.Day;
+        }
+
+    }
+    else
+    {
+        if (now.Day.ToString().Length.Equals(1))
+        {
+            MinDate = now.Year + "-" + now.Month + "-0" + now.Day;
+
+        }
+        else
+        {
+            MinDate = now.Year + "-" + now.Month + "-" + now.Day;
+
+        }
+
+
     }
 }
 
@@ -46,8 +79,8 @@ else if (ViewBag.SeatsLeft == 1)
 
         </div>*@
         <div class="col-sm-10">
-            <select asp-for="HourComing" class="custom-select mr-sm-2"
-                    asp-items="@hours">
+            <select asp-for="HourComing" class="custom-select mr-sm-2" 
+                    asp-items="@hours" >
                 <option value="">Please select...</option>
             </select>
             <span asp-validation-for="HourComing" class="text-danger"></span>
@@ -57,7 +90,7 @@ else if (ViewBag.SeatsLeft == 1)
     <div class="form-group row">
         <label asp-for="Date" class="col-sm-2 col-form-label"></label>
         <div class="col-sm-10">
-            <input asp-for="Date" class="form-control" placeholder="Date" type="date" value="2022-03-15">
+            <input asp-for="Date" class="form-control" placeholder="Date" type="date" min="@MinDate" value="@MinDate">
             <span asp-validation-for="Date" class="text-danger"></span>
 
         </div>
