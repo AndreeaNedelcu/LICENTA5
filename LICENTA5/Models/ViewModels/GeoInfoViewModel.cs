@@ -45,6 +45,6 @@ namespace LICENTA5.Models.ViewModels
 
         [JsonProperty("longitude")]
 
-        public string Longitude { get; set; }
+        public decimal Longitude { get; set; }
     }
 }

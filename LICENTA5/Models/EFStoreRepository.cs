@@ -170,5 +170,39 @@ namespace LICENTA5.Models
 
             return card;
         }
+
+        public PremiumOffer AddPremiumOffer(PremiumOffer offer)
+        {
+            context.PremiumOffers.Add(offer);
+            context.SaveChanges();
+            return offer;
+        }
+
+        public PremiumOffer DeletePremiumOffer(int id)
+        {
+            PremiumOffer offer = context.PremiumOffers.Find(id);
+            if (offer != null)
+            {
+                context.PremiumOffers.Remove(offer);
+
+                context.SaveChanges();
+
+            }
+
+            return offer;
+        }
+
+        public PremiumOffer UpdatePremiumOffer(PremiumOffer offerChanges)
+        {
+            var offer = context.PremiumOffers.Attach(offerChanges);
+            offer.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            context.SaveChanges();
+            return offerChanges;
+        }
+
+        public IEnumerable<PremiumOffer> GetOffers()
+        {
+            return context.PremiumOffers;
+        }
     }
 }

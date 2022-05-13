@@ -30,6 +30,8 @@ namespace LICENTA5.Models
 
         [ForeignKey("Restaurant")]
         public long RestaurantId { get; set; }
+        [PremiumOffersValidation]
+        public string? VoucherCode { get; set; }
 
     }
 }

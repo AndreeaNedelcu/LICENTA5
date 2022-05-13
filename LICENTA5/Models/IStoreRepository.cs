@@ -28,5 +28,12 @@ namespace LICENTA5.Models
 
         RestaurantRating AddRating(RestaurantRating review);
         GiftCard AddGiftCard(GiftCard card);
+
+        PremiumOffer AddPremiumOffer(PremiumOffer offer);
+
+        PremiumOffer DeletePremiumOffer(int id);
+
+        PremiumOffer UpdatePremiumOffer(PremiumOffer offerChanges);
+        IEnumerable<PremiumOffer> GetOffers();
     }
 }

@@ -5,7 +5,7 @@
     float lon = 0;
     }
 
-<form enctype="multipart/form-data" asp-controller="home" asp-action="AddRestaurant" method="post" class="mt-3">
+<form enctype="multipart/form-data" id="myForm" class="mt-3">
 
     <div class="form-group row">
         <label asp-for="RestaurantName" class="col-sm-2 col-form-label" style="color:white ; padding:10px"></label>
@@ -65,28 +65,37 @@
 
         </div>
     </div>
-    <div  class="form-group row">
+    <div hidden class="form-group row">
         <label asp-for="Latitude" class="col-sm-2 col-form-label" style="color:white; padding:10px"></label>
-            <div class="col-sm-10">
-                <input  asp-for="Latitude" class="form-control"  placeholder="Latitude">
-                <span asp-validation-for="Latitude" class="text-danger"></span>
+        <div class="col-sm-10">
+            <input asp-for="Latitude" class="form-control" placeholder="Latitude" id="latInput">
+            <span asp-validation-for="Latitude" class="text-danger"></span>
 
-            </div>
+        </div>
         @*<div id="map" style="height:230px; width:100%" onclick="onMapClick()">
 
             </div>*@
 
-        @*<span> Loc</span>
-        <input type="text" id="txtPlaces" required />*@
+        
     </div>
-    <div   class="form-group row">
-            <label asp-for="Longitude" class="col-sm-2 col-form-label" style="color:white; padding:10px"></label>
-            <div class="col-sm-10">
-                <input asp-for="Longitude" class="form-control"  placeholder="Longitude">
-                <span asp-validation-for="Longitude" class="text-danger"></span>
+    <div class="form-group row">
+        @*<label asp-for="Latitude" class="col-sm-2 col-form-label" style="color:white; padding:10px"></label>
+        <div class="col-sm-10">
+            <input asp-for="Latitude" class="form-control" placeholder="Latitude" id="latInput">
+            <span asp-validation-for="Latitude" class="text-danger"></span>*@
+        <span> Address</span>
+        <input type="text" id="txtPlaces" required />
 
-            </div>
+    </div>
+    </div>
+    <div hidden class="form-group row">
+        <label asp-for="Longitude" class="col-sm-2 col-form-label" style="color:white; padding:10px"></label>
+        <div class="col-sm-10">
+            <input asp-for="Longitude" class="form-control" placeholder="Longitude" id="lngInput">
+            <span asp-validation-for="Longitude" class="text-danger"></span>
+
         </div>
+    </div>
     <div class="form-group row">
         <label style="color:white" asp-for="Photo" class="col-sm-2 col-form-label"></label>
         <div class="col-sm-10">
@@ -110,7 +119,7 @@
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group row">
         <div class="col-sm-10">
-            <button type="submit" class="btn btn-common">Create</button>
+            <button type="submit" class="btn btn-common" id="btnSubmit">Create</button>
         </div>
     </div>
 
@@ -118,6 +127,30 @@
         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=places&key=AIzaSyDq_B5S5fvlG2VbaEYRDkG59Wc7pjs4ZbQ"></script>
 
         <script>
+
+
+            google.maps.event.addDomListener(window, 'load', function () {
+                var places = new google.maps.places.Autocomplete(document.getElementById('txtPlaces'));
+                google.maps.event.addListener(places, 'place_changed', function () {
+                    var place = places.getPlace();
+                    var address = place.formatted_address;
+                    var latitude = place.geometry.location.lat();
+                    var longitude = place.geometry.location.lng();
+
+
+                    //var mesg = "Address: " + address;
+                    //mesg += "\nLatitude: " + latitude;
+                    //mesg += "\nLongitude: " + longitude;
+                    //alert(mesg);
+
+
+
+                    document.getElementById("latInput").value = latitude;
+                    document.getElementById("lngInput").value = longitude;
+
+                });
+            });
+
 
 
             $(document).ready(function () {
@@ -128,45 +161,25 @@
 
 
 
+                $("#btnSubmit").click(function () {
+
+                    var data = $("#myForm").serialize();
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/AddRestaurant",
+                        data: data,
+                        success: function (response) {
+                            alert("you are done")
+                            window.location = "https://localhost:44354/Home/Restaurants"
+                        }
+                    })
+                })
+
+
             });
 
 
-            //var map;
-            //function initMap() {
-            //    var markedPlace = { lat: 44.4267674, lng: 26.1025384 };
-            //    map = new google.maps.Map(document.getElementById('map'), {
-            //        center: markedPlace,
-            //        zoom: 20
-            //    }
-            //    );
-
-            //    const marker = new google.maps.Marker({
-            //        position: markedPlace,
-            //        map: map,
-            //    });
-            //}
-          
-
-            google.maps.event.addDomListener(window, 'load', function () {
-                var places = new google.maps.places.Autocomplete(document.getElementById('txtPlaces'));
-                google.maps.event.addListener(places, 'place_changed', function () {
-                    var place = places.getPlace();
-                    var address = place.formatted_address;
-                    var latitude = place.geometry.location.lat();
-                    var longitude = place.geometry.location.lng();
-                   
-
-                    //var mesg = "Address: " + address;
-                    //mesg += "\nLatitude: " + latitude;
-                    //mesg += "\nLongitude: " + longitude;
-                    //alert(mesg);
-                   
-                   
-
-
-
-                });
-            });
 
 
         </script>

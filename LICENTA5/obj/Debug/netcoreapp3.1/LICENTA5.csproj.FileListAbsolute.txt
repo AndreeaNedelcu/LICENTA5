@@ -274,4 +274,5 @@ C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\ZXing.Wi
 C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.1\Microsoft.Win32.SystemEvents.dll
 C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp3.1\System.Drawing.Common.dll
 C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.1\System.Drawing.Common.dll
-C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_HomeLayout.cshtml.g.cs
+C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_RestaurantAddedSuccessfully.cshtml.g.cs
+C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_AboutLayout.cshtml.g.cs

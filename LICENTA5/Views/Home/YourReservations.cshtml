@@ -30,11 +30,44 @@
 
                         <h4 style="color:black">CONGRATULATIONS!</h4>
                         <hr />
-                        <p style="color:black">You have reached 10 reservation through us! Your account has been upgraded to Premium.</p> <button class="btn btn-out btn-square continue">CONTINUE</button>
+                        <p style="color:black; margin:0px; padding:0px">Your account has been upgraded to <b>Premium</b>! You have been a loyal client of Flash Table and now you have access to some Premium features. Come back here everyday to see your offers, but hurry up, they won't last too long!</p> 
+                      
+                        @*<div class="container-fluid">*@
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h3>TODAY'S OFFERS</h3>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="col-xs-3 5"> </div>
+                                        <div class="quiz" id="quiz" data-toggle="buttons">
+                                            <label class="element-animation1 btn btn-lg btn-common btn-block" onclick="showHide('firstCode')"><span class="btn-label"><i class="glyphicon glyphicon-chevron-right"></i></span>@ViewBag.listFeatures[0]</label>
+                                            <p id="firstCode" style="display:none;">@ViewBag.listCodes[0]</p>
+                                            <label class="element-animation2 btn btn-lg btn-common btn-block" onclick="showHide('secondCode')"><span class="btn-label"><i class="glyphicon glyphicon-chevron-right"></i></span> @ViewBag.listFeatures[1]</label>
+                                            <p id="secondCode" style="display:none;">@ViewBag.listCodes[1]</p>
+                                            <label class="element-animation3 btn btn-lg btn-common btn-block" onclick="showHide('thirdCode')"><span class="btn-label"><i class="glyphicon glyphicon-chevron-right"></i></span>@ViewBag.listFeatures[2]</label>
+                                            <p id="thirdCode" style="display:none;">@ViewBag.listCodes[2]</p>
+
+                                            <label class="element-animation4 btn btn-lg btn-common btn-block" onclick="showHide('fourthCode')"><span class="btn-label"><i class="glyphicon glyphicon-chevron-right"></i></span>@ViewBag.listFeatures[3]</label>
+                                            <p id="fourthCode" style="display:none;">@ViewBag.listCodes[3]</p>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @*</div>*@
+
+
                     </div>
+
+                   
+
                 </div>
             </div>
+
+           
         </div>
+
     }
 
 
@@ -59,4 +92,9 @@
 </div>
 
 
-}
+<script>
+    function showHide(id) {
+        var e = document.getElementById(id);
+        e.style.display = (e.style.display == 'block') ? 'none' : 'block';
+    }
+</script>

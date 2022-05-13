@@ -15,27 +15,28 @@
 }
 
 
+
 <section class="top-main">
-    <div class="top-site-images">
-        <img src="~/images/header1.jpg" alt="">
-    </div>
-    <div class="page-title-wrapper">
-        <div class="container">
-            <div class="banner-wrapper" style="width:60%">
+        <div class="top-site-images">
+            <img src="~/images/header1.jpg" alt="">
+        </div>
+        <div class="page-title-wrapper">
+            <div class="container">
+                <div class="banner-wrapper" style="width:60%">
 
-                <form method="get">
-                    <div class="input-group">
-                        <input class="form-control" asp-for="@Model.SearchTerm">
-                        <div class="input-group-append" style="padding-bottom:20px">
-                            <button class="btn btn-common" type="submit" style="padding:10px"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    <form method="get">
+                        <div class="input-group">
+                            <input class="form-control" asp-for="@Model.SearchTerm">
+                            <div class="input-group-append" style="padding-bottom:20px">
+                                <button class="btn btn-common" type="submit" style="padding:10px"><i class="fa-solid fa-magnifying-glass"></i></button>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
 
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 <div style="padding-top:30px">
 
     <!--<button onclick="help()" class="btn btn-common">Help</button>
@@ -51,7 +52,7 @@
         }
     }
 
- 
+
 
 
 
@@ -84,7 +85,7 @@
                 <div class="card" style="width:250px;margin: 20px; background-color:transparent;color:white">
 
                     <card class="card-body">
-                        <a href="https://localhost:44354/home/RestaurantDetails/@Model.NearestRestaurant.RestaurantID" class="btn btn-common" style="padding:10px" ><i class="fa-solid fa-location-crosshairs fa-3x"></i></a>
+                        <a href="https://localhost:44354/home/RestaurantDetails/@Model.NearestRestaurant.RestaurantID" class="btn btn-common" style="padding:10px"><i class="fa-solid fa-location-crosshairs fa-3x"></i></a>
                         <span style="color:white"><b>AT HAND</b> </span>
                         <p style="color:white">You do not always need to go too far for good food. Let's see the nearest restaurant for you.</p>
                     </card>
@@ -229,7 +230,7 @@
                 </div>
             </div>
         </div>
-        @*<div id="mapholder"></div>*@
+      
 
 
     </div>
@@ -249,7 +250,7 @@
     </div>
 
     <script>
-     
+
 
 
 

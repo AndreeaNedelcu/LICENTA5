@@ -23,5 +23,8 @@ namespace LICENTA5.Models.ViewModels
         public string PageTitle { get; set; }
 
         public ApplicationUser ApplicationUser { get; set; }
+       
+        public string? VoucherCode { get; set; }
+
     }
 }

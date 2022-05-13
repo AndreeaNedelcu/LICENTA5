@@ -25,6 +25,7 @@ namespace LICENTA5.Models
         public DbSet<RestaurantRating> Ratings { get; set; }
         public DbSet<GiftCard> GiftCards { get; set; }
 
+        public DbSet<PremiumOffer> PremiumOffers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -4,14 +4,16 @@ using LICENTA5.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LICENTA5.Migrations.StoreDb
 {
     [DbContext(typeof(StoreDbContext))]
-    partial class StoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220513133604_AddVoucherCode on reservation")]
+    partial class AddVoucherCodeonreservation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,27 +56,6 @@ namespace LICENTA5.Migrations.StoreDb
                     b.HasKey("GiftCardID");
 
                     b.ToTable("GiftCards");
-                });
-
-            modelBuilder.Entity("LICENTA5.Models.PremiumOffer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Code")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Offer")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Today")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PremiumOffers");
                 });
 
             modelBuilder.Entity("LICENTA5.Models.Reservation", b =>

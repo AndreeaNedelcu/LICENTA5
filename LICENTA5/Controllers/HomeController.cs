@@ -24,6 +24,7 @@ using System.Net.Mail;
 using System.Net;
 using System.Net.Http;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace LICENTA5.Controllers
 {
@@ -93,6 +94,29 @@ namespace LICENTA5.Controllers
             return (rad * 180.0 / Math.PI);
         }
 
+        public string RandomString(int size, bool lowerCase = false)
+        {
+            Random _random = new Random();
+        var builder = new StringBuilder(size);
+
+            // Unicode/ASCII Letters are divided into two blocks
+            // (Letters 65–90 / 97–122):   
+            // The first group containing the uppercase letters and
+            // the second group containing the lowercase.  
+
+            // char is a single Unicode character  
+            char offset = lowerCase ? 'a' : 'A';
+            const int lettersOffset = 26; // A...Z or a..z: length = 26  
+
+            for (var i = 0; i < size; i++)
+            {
+                var @char = (char)_random.Next(offset, offset + lettersOffset);
+                builder.Append(@char);
+            }
+
+            return lowerCase ? builder.ToString().ToLower() : builder.ToString();
+        }
+
         [AllowAnonymous]
         public async Task<IActionResult> IndexAsync(string? searchTerm)
         {
@@ -117,8 +141,21 @@ namespace LICENTA5.Controllers
 
                
             }
-            var latitude =Decimal.ToDouble( locatioNinfo.Latitude);
-            double longitud = Double.Parse( locatioNinfo.Longitude);
+            //PROXY ?????
+            var latitude = 0.0;
+            var longitud = 0.0;
+            if (locatioNinfo != null)
+            {
+                 latitude = Decimal.ToDouble(locatioNinfo.Latitude);
+                 longitud = Decimal.ToDouble(locatioNinfo.Longitude);
+               //  longitud = Double.Parse(locatioNinfo.Longitude);
+            }
+            else
+            {
+                latitude = 0;
+                longitud = 0;
+            }
+           
             var restaurants = repository.Restaurants;
             var minDistance = 9999.999;
             var closestRestaurant = new Restaurant();
@@ -189,15 +226,66 @@ e.Type == type).Count()
             return View();
         }
 
+        public void ChangePremiumOffers()
+        {
+            var today = DateTime.Now;
+            Random rand = new Random();
+            int toSkip = rand.Next(1, repository.Restaurants.Count() - 5);
+
+
+            Restaurant[] restaurantsRandom = repository.Restaurants.Skip(toSkip).Take(5).ToArray();
+
+            Restaurant res1 = restaurantsRandom[0];
+            Restaurant res2 = restaurantsRandom[1];
+            Restaurant res3 = restaurantsRandom[2];
+            Restaurant res4 = restaurantsRandom[3];
+
+            var codeBuilder = new StringBuilder();
+            codeBuilder.Append(RandomString(7));
+            var codeBuilder1 = new StringBuilder();
+            codeBuilder1.Append(RandomString(7));
+            var codeBuilder2 = new StringBuilder();
+            codeBuilder2.Append(RandomString(7));
+            var codeBuilder3 = new StringBuilder();
+            codeBuilder3.Append(RandomString(7));
+
+            PremiumOffer offer1 = new PremiumOffer
+            {
+                Today = today,
+                Offer = "A free coffee at " + res1.RestaurantName,
+                Code = codeBuilder.ToString()
+            };
+            PremiumOffer offer2 = new PremiumOffer
+            {
+                Today = today,
+                Offer = "50% voucher at " + res2.RestaurantName,
+                Code = codeBuilder1.ToString()
+            };
+            PremiumOffer offer3 = new PremiumOffer
+            {
+                Today = today,
+                Offer = "A free drink at " + res3.RestaurantName,
+                Code = codeBuilder2.ToString()
+            };
+            PremiumOffer offer4 = new PremiumOffer
+            {
+                Today = today,
+                Offer = "20% voucher for food at " + res4.RestaurantName,
+                Code = codeBuilder3.ToString()
+            };
+
+            repository.AddPremiumOffer(offer1);
+            repository.AddPremiumOffer(offer2);
+            repository.AddPremiumOffer(offer3);
+            repository.AddPremiumOffer(offer4);
+        }
+
         [Authorize]
         public async Task<IActionResult> YourReservationsAsync(string? sortOrder, int page=1)
         {
             int pageSize = 3;
              var modelReservations = repository.GetReservations(await GetCurrentUserId());
-           // var modelReservations = repository.GetReservations(await GetCurrentUserId()).Skip((pageNumber - 1) * PageSizeReservations).Take(PageSizeReservations);
-
             ApplicationUser user = await _userManager.GetUserAsync(HttpContext.User);
-            //if (user.Reservations.Count > 2)
 
             ViewData["DateSortParm"] = sortOrder == "Date" ? "date" : "Date";
             switch (sortOrder)
@@ -238,8 +326,6 @@ e.Type == type).Count()
                         repository.DeleteReservation(i.ReservationId);
                        }
                         
-                    
-                   
                 }
             }
             YourReservationsViewModel model = new YourReservationsViewModel
@@ -252,8 +338,31 @@ e.Type == type).Count()
                     TotalItems = modelReservations.Count()
                 }
             };
-            
-            
+
+            var today = DateTime.Now;
+            var premiumOffersData = repository.GetOffers();
+            if(premiumOffersData.Count()==0)
+            {
+                ChangePremiumOffers();
+            }else if (!(today.ToShortDateString().Equals(repository.GetOffers().First().Today.ToShortDateString())))
+            {
+                List<PremiumOffer> currentOffers = repository.GetOffers().ToList();
+                foreach(var o in currentOffers)
+                {
+                  repository.DeletePremiumOffer(o.Id);
+                }
+                ChangePremiumOffers();
+            }
+
+            var offers = repository.GetOffers();
+            List<string> premiumFeatures = new List<string>();
+            List<string> voucherCodes = new List<string>();
+            foreach (PremiumOffer o in offers){
+                premiumFeatures.Add(o.Offer);
+                voucherCodes.Add(o.Code);
+            }
+            ViewBag.listFeatures = premiumFeatures;
+            ViewBag.listCodes = voucherCodes;
             return View(model);
         }
 
@@ -388,6 +497,7 @@ e.Type == type).Count()
                 }
                 ViewData["MyKeyMaps"] = "AIzaSyDq_B5S5fvlG2VbaEYRDkG59Wc7pjs4ZbQ";
                 repository.Add(newRest);
+               // return PartialView("_RestaurantAddedSuccessfully");
                 return RedirectToAction("Restaurants", new { id = newRest.RestaurantID });
             }
             return View();
@@ -484,7 +594,25 @@ e.Type == type).Count()
         [Authorize]
         public async Task<IActionResult> AddBookingAsync(AddBookingViewModel model, int id)
         {
-           
+            var currentOffers = repository.GetOffers().ToList();
+            List<string> currentCodes = new List<string>();
+            foreach(var o in currentOffers)
+            {
+                currentCodes.Add(o.Code);
+            }
+            bool isFound = false;
+            foreach(var c in currentCodes)
+            {
+                if (model.VoucherCode.Equals(c))
+                    isFound = true;
+            }
+            if (isFound == false)
+            {
+                ViewBag.ErrorTitle = "Invalid code";
+                ViewBag.ErrorMessage = "It seems like your code is not valid or has expired. Please check your promotions again.";
+                return View("Error");
+            }
+                
            
             if (ModelState.IsValid)
             {
@@ -497,7 +625,8 @@ e.Type == type).Count()
                     HourComing = model.HourComing,
                     Date = model.Date,
                     UserId = await GetCurrentUserId(),
-                    RestaurantId=model.Restaurant.RestaurantID
+                    RestaurantId=model.Restaurant.RestaurantID,
+                    VoucherCode=model.VoucherCode
                 };
                 if(model.Restaurant.EmptySeats != 0 && newReservation.NrPers <= model.Restaurant.EmptySeats)
                 {
