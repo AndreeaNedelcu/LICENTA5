@@ -17,6 +17,13 @@
         </div>
     </div>
     <div class="form-group row">
+        <label asp-for="PhoneNo" class="col-sm-2 col-form-label" style="color:white ; padding:10px"></label>
+        <div class="col-sm-10">
+            <input asp-for="PhoneNo" class="form-control" placeholder="Phone">
+            <span asp-validation-for="PhoneNo" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
         <label asp-for="Description" class="col-sm-2 col-form-label" style="color:white ; padding:10px"></label>
         <div class="col-sm-10">
             <input asp-for="Description" class="form-control" placeholder="Description">
@@ -60,18 +67,18 @@
 
         </div>
     </div>
-    <div class="form-group row">
+    <div hidden class="form-group row">
         <label asp-for="Latitude" class="col-sm-2 col-form-label" style="color:white; padding:10px"></label>
         <div class="col-sm-10">
-            <input asp-for="Latitude" class="form-control" placeholder="Latitude">
+            <input asp-for="Latitude" class="form-control" placeholder="Latitude" id="latInput">
             <span asp-validation-for="Latitude" class="text-danger"></span>
 
         </div>
     </div>
-    <div class="form-group row">
+    <div hidden class="form-group row">
         <label asp-for="Longitude" class="col-sm-2 col-form-label" style="color:white; padding:10px"></label>
         <div class="col-sm-10">
-            <input asp-for="Longitude" class="form-control" placeholder="Longitude">
+            <input asp-for="Longitude" class="form-control" placeholder="Longitude" id="lngInput">
             <span asp-validation-for="Longitude" class="text-danger"></span>
 
         </div>
@@ -96,7 +103,14 @@
             </div>
         </div>
     </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" style="color:white; padding:10px"> Address</label>
+        <div class="col-sm-10">
 
+            <input type="text" id="txtPlaces" required class="col-md-12" />
+        </div>
+
+    </div>
 
 
     <div asp-validation-summary="All" class="text-danger"></div>
@@ -108,7 +122,24 @@
     </div>
 
     @section Scripts {
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=places&key=AIzaSyDq_B5S5fvlG2VbaEYRDkG59Wc7pjs4ZbQ"></script>
+
         <script>
+            google.maps.event.addDomListener(window, 'load', function () {
+                var places = new google.maps.places.Autocomplete(document.getElementById('txtPlaces'));
+                google.maps.event.addListener(places, 'place_changed', function () {
+                    var place = places.getPlace();
+                    var address = place.formatted_address;
+                    var latitude = place.geometry.location.lat();
+                    var longitude = place.geometry.location.lng();
+
+
+                    document.getElementById("latInput").value = latitude;
+                    document.getElementById("lngInput").value = longitude;
+
+                });
+            });
+
             $(document).ready(function () {
                 $('.custom-file-input').on("change", function () {
                     var fileName = $(this).val().split("\\").pop();

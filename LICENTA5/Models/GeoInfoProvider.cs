@@ -22,6 +22,7 @@ namespace LICENTA5.Models
         }
         public async Task<string> GetIPAddress()
         {
+
             var ipAddress = await _httpClient.GetAsync($"http://ipinfo.io/ip");
             if (ipAddress.IsSuccessStatusCode)
             {

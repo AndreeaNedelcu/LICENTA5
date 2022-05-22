@@ -20,6 +20,7 @@
     <link runat="server" rel="shortcut icon" href="~/favicon.ico" type="image/x-icon" />
     <link runat="server" rel="icon" href="~/images/Logo/favicon.ico" type="image/ico" />
     <link href="~/css/card.css" rel="stylesheet" />
+    
 </head>
 <body>
 
@@ -95,18 +96,19 @@
 
 
     <section class="top-main" style="padding:0px; margin:0px">
-        <div class="top-site-images">
-            <img src="~/images/header1.jpg" alt="">
-        </div>
-        <div class="page-title-wrapper">
-            <div class="container">
-                <div class="banner-wrapper">
-                    <h1 class="heading">About Us</h1>
-                    <p class="description">REMY - BEST BOOTSTRAP HTML5 RESTAURENT TEMPLATE</p>
+            <div class="top-site-images">
+                <img src="~/images/header1edit.jpg" alt="">
+            </div>
+            <div class="page-title-wrapper">
+                <div class="container">
+                    <div class="banner-wrapper" style="width:60%">
+                       
+                        @RenderSection("header");
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    
     <div class="body2" style="width:100%; height:100%;">
 
 

@@ -22,6 +22,7 @@ namespace LICENTA5.Models
 
         public DbSet<ApplicationUser> Users { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
+       
         public DbSet<RestaurantRating> Ratings { get; set; }
         public DbSet<GiftCard> GiftCards { get; set; }
 

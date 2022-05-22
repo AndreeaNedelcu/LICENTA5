@@ -11,27 +11,27 @@
     Restaurant res = null;
 
     res = repository.Restaurants.Skip(toSkip).Take(1).FirstOrDefault();
-
+    Layout = "~/Views/Shared/_AboutLayout.cshtml";
 }
 
 
 
 <section class="top-main">
         <div class="top-site-images">
-            <img src="~/images/header1.jpg" alt="">
+            @*<img src="~/images/header1.jpg" alt="">*@
         </div>
         <div class="page-title-wrapper">
             <div class="container">
                 <div class="banner-wrapper" style="width:60%">
 
-                    <form method="get">
+                    @*<form method="get">
                         <div class="input-group">
                             <input class="form-control" asp-for="@Model.SearchTerm">
                             <div class="input-group-append" style="padding-bottom:20px">
                                 <button class="btn btn-common" type="submit" style="padding:10px"><i class="fa-solid fa-magnifying-glass"></i></button>
                             </div>
                         </div>
-                    </form>
+                    </form>*@
 
                 </div>
             </div>
@@ -39,9 +39,6 @@
     </section>
 <div style="padding-top:30px">
 
-    <!--<button onclick="help()" class="btn btn-common">Help</button>
-
-    <div id="Text" style="display:none">-->
     <!--<partial name="RestaurantSummary" model="@Model.RandomRestaurant" />
     </div>-->
     @if (Model.SearchTerm != null)
@@ -108,67 +105,6 @@
     </div>
 
 
-    <div class="row">
-        <div class="col-md-12 col-xs-6 justify-content-center " style="color:white">
-
-            <h1 style="color:white;text-align:center">
-                Offer a gift card!
-                <img src="https://img.icons8.com/external-flaticons-flat-flat-icons/64/000000/external-gift-card-black-friday-cyber-monday-flaticons-flat-flat-icons.png" />
-
-            </h1>
-            <section class="accordion_two_section ptb-100">
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-sm-6 accordionTwo">
-                            <div class="panel-group" id="accordionTwoLeft">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title"> <a data-toggle="collapse" data-parent="#accordionTwoLeft" href="#collapseTwoLeftone" aria-expanded="false" class="collapsed"> How to use the gift card? </a> </h4>
-                                    </div>
-                                    <div id="collapseTwoLeftone" class="panel-collapse collapse" aria-expanded="false" role="tablist" style="height: 0px;">
-                                        <div class="panel-body">
-                                            <ul>
-                                                <li>
-                                                    -> After you buy a credit card for a friend they will receive an email with the generated QR code, the value and the valability period.
-                                                    The card can be used at any of the partner restaurants.
-                                                </li>
-                                                <li>
-                                                    -> A reservation must be made through Flash Table and the card can be used by presenting the QR code at the restaurant.
-                                                </li>
-                                            </ul>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" data-parent="#accordionTwoLeft" href="#collapseTwoLeftTwo" aria-expanded="false"> Valability</a> </h4>
-                                    </div>
-                                    <div id="collapseTwoLeftTwo" class="panel-collapse collapse" aria-expanded="false" role="tablist">
-                                        <div class="panel-body"> The gift card is availabale for 6 month after it was issues. The email that we'll send will contain the unique QR code together with the period it can be used. </div>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" data-parent="#accordionTwoLeft" href="#collapseTwoLeftThree" aria-expanded="false"> How to buy? </a> </h4>
-                                    </div>
-                                    <div id="collapseTwoLeftThree" class="panel-collapse collapse" aria-expanded="false" role="tablist">
-                                        <div class="panel-body">Click on the button bellow, choose a value for the gift card and make sure you enter a correct email account. You can also write your friend a message that it will be also emailed.</div>
-                                        <div class=" row justify-content-center"> <a style="color:white" asp-action="BuyGiftCard" asp-controller="Home" class="btn btn-common"><b>Buy</b></a></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-
-
-
-        </div>
-    </div>
-
     <div class="page-container" style="margin-top:30px">
         <div class="container">
             <div class="row">
@@ -230,7 +166,73 @@
                 </div>
             </div>
         </div>
-      
+
+
+        <div class="row">
+            <div class="col-md-12 col-xs-6 justify-content-center " style="color:white">
+
+                <h1 style="color:white;text-align:center;margin-top:100px" >
+                    Offer a gift card!
+                    <img src="https://img.icons8.com/external-flaticons-flat-flat-icons/64/000000/external-gift-card-black-friday-cyber-monday-flaticons-flat-flat-icons.png" />
+
+                </h1>
+                <section class="accordion_two_section ptb-100">
+                    <div class="container">
+                        <div class="row ">
+                            <div class="col-md-6 col-sm-6 accordionTwo">
+                                <div class="panel-group" id="accordionTwoLeft">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title"> <a data-toggle="collapse" data-parent="#accordionTwoLeft" href="#collapseTwoLeftone" aria-expanded="false" class="collapsed"> How to use the gift card? </a> </h4>
+                                        </div>
+                                        <div id="collapseTwoLeftone" class="panel-collapse collapse" aria-expanded="false" role="tablist" style="height: 0px;">
+                                            <div class="panel-body">
+                                                <ul>
+                                                    <li>
+                                                        -> After you buy a credit card for a friend they will receive an email with the generated QR code, the value and the valability period.
+                                                        The card can be used at any of the partner restaurants.
+                                                    </li>
+                                                    <li>
+                                                        -> A reservation must be made through Flash Table and the card can be used by presenting the QR code at the restaurant.
+                                                    </li>
+                                                </ul>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" data-parent="#accordionTwoLeft" href="#collapseTwoLeftTwo" aria-expanded="false"> Availability</a> </h4>
+                                        </div>
+                                        <div id="collapseTwoLeftTwo" class="panel-collapse collapse" aria-expanded="false" role="tablist">
+                                            <div class="panel-body"> The gift card is availabale for 6 month after it was issues. The email that we'll send will contain the unique QR code together with the period it can be used. </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" data-parent="#accordionTwoLeft" href="#collapseTwoLeftThree" aria-expanded="false"> How to buy? </a> </h4>
+                                        </div>
+                                        <div id="collapseTwoLeftThree" class="panel-collapse collapse" aria-expanded="false" role="tablist">
+                                            <div class="panel-body">Click on the button bellow, choose a value for the gift card and make sure you enter a correct email account. You can also write your friend a message that it will be also emailed.</div>
+                                            <div class=" row justify-content-center"> <a style="color:white" asp-action="BuyGiftCard" asp-controller="Home" class="btn btn-common"><b>Buy</b></a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <img src="~/images/giftcard/qrcode.jpg" />
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+
+
+            </div>
+        </div>
+
+
 
 
     </div>
@@ -248,7 +250,17 @@
         <h3>You're all done! You should be able to see your reservation and its details on My Reservations </h3>
 
     </div>
+    @section header{
 
+        <form method="get">
+            <div class="input-group">
+                    <input class="form-control" asp-for="@Model.SearchTerm" style="opacity:0.7">
+                <div class="input-group-append">
+                    <button class="btn btn-common" type="submit" style="height: 100%;margin: 0px;padding-bottom: 5px;padding-top: 2px;margin-left: 8px; "><i class="fa-solid fa-magnifying-glass" style=" padding-top: 5px;"></i></button>
+                </div>
+            </div>
+        </form>
+    }
     <script>
 
 

@@ -40,13 +40,13 @@ namespace LICENTA5.Controllers
         {
             if (ModelState.IsValid)
             {
-                // We just need to specify a unique role name to create a new role
+              
                 IdentityRole identityRole = new IdentityRole
                 {
                     Name = model.RoleName
                 };
 
-                // Saves the role in the underlying AspNetRoles table
+               
                 IdentityResult result = await roleManager.CreateAsync(identityRole);
 
                 if (result.Succeeded)
@@ -87,9 +87,7 @@ namespace LICENTA5.Controllers
 
             foreach (var user in userManager.Users)
             {
-                // If the user is in this role, add the username to
-                // Users property of EditRoleViewModel. This model
-                // object is then passed to the view for display
+                
                 if (await userManager.IsInRoleAsync(user, role.Name))
                 {
                     model.Users.Add(user.UserName);
@@ -112,7 +110,7 @@ namespace LICENTA5.Controllers
             {
                 role.Name = model.RoleName;
 
-                // Update the Role using UpdateAsync
+           
                 var result = await roleManager.UpdateAsync(role);
 
                 if (result.Succeeded)

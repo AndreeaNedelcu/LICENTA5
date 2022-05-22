@@ -33,5 +33,6 @@ namespace LICENTA5.Models
         [PremiumOffersValidation]
         public string? VoucherCode { get; set; }
 
+        public bool Passed { get; set; }
     }
 }

@@ -11,5 +11,6 @@ namespace LICENTA5.Models
         public DateTime Today { get; set; }
         public string Offer { get; set; }
         public string Code { get; set; }
+        public String RestaurantName { get; set; }
     }
 }

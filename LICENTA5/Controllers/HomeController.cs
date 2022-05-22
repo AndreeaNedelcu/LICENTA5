@@ -130,6 +130,7 @@ namespace LICENTA5.Controllers
             IndexViewModel model = null;
 
             GeoInfoProvider geoInfoProvider = new GeoInfoProvider();
+           
             var ipAddress = await geoInfoProvider.GetIPAddress();
             var response = await _httpClient.GetAsync($"http://api.ipstack.com/" + ipAddress + "?access_key=181601ebb5b10caa7cac2b391e8a23e7");
             var locatioNinfo = new GeoInfoViewModel();
@@ -253,25 +254,29 @@ e.Type == type).Count()
             {
                 Today = today,
                 Offer = "A free coffee at " + res1.RestaurantName,
-                Code = codeBuilder.ToString()
+                Code = codeBuilder.ToString(),
+                RestaurantName=res1.RestaurantName
             };
             PremiumOffer offer2 = new PremiumOffer
             {
                 Today = today,
                 Offer = "50% voucher at " + res2.RestaurantName,
-                Code = codeBuilder1.ToString()
+                Code = codeBuilder1.ToString(),
+                RestaurantName=res2.RestaurantName
             };
             PremiumOffer offer3 = new PremiumOffer
             {
                 Today = today,
                 Offer = "A free drink at " + res3.RestaurantName,
-                Code = codeBuilder2.ToString()
+                Code = codeBuilder2.ToString(),
+                RestaurantName=res3.RestaurantName
             };
             PremiumOffer offer4 = new PremiumOffer
             {
                 Today = today,
                 Offer = "20% voucher for food at " + res4.RestaurantName,
-                Code = codeBuilder3.ToString()
+                Code = codeBuilder3.ToString(),
+                RestaurantName=res4.RestaurantName
             };
 
             repository.AddPremiumOffer(offer1);
@@ -284,7 +289,7 @@ e.Type == type).Count()
         public async Task<IActionResult> YourReservationsAsync(string? sortOrder, int page=1)
         {
             int pageSize = 3;
-             var modelReservations = repository.GetReservations(await GetCurrentUserId());
+            var modelReservations = repository.GetReservations(await GetCurrentUserId()).Where(e => e.Passed.Equals(false));
             ApplicationUser user = await _userManager.GetUserAsync(HttpContext.User);
 
             ViewData["DateSortParm"] = sortOrder == "Date" ? "date" : "Date";
@@ -320,11 +325,13 @@ e.Type == type).Count()
                 if (currentDate.AddHours(1) > reservationRealDate)
                 {
                    
-                       if(restaurant != null) {
+                    if (restaurant != null) {
                         restaurant.EmptySeats += i.NrPers;
                         repository.Update(restaurant);
-                        repository.DeleteReservation(i.ReservationId);
-                       }
+                        i.Passed = true;
+                        repository.Update(i, await GetCurrentUserId());
+                      //  repository.DeleteReservation(i.ReservationId);
+                    }
                         
                 }
             }
@@ -361,6 +368,7 @@ e.Type == type).Count()
                 premiumFeatures.Add(o.Offer);
                 voucherCodes.Add(o.Code);
             }
+
             ViewBag.listFeatures = premiumFeatures;
             ViewBag.listCodes = voucherCodes;
             return View(model);
@@ -583,6 +591,8 @@ e.Type == type).Count()
                Restaurant= repository.GetRestaurant(Id),
                 PageTitle = "Create reservation at "
             };
+            ViewBag.open = addBookingViewModel.Restaurant.openHour;
+            ViewBag.close = addBookingViewModel.Restaurant.closingHour;
             ViewBag.ReservationAt = addBookingViewModel.Restaurant.RestaurantName;
             ViewBag.OpenHour = addBookingViewModel.Restaurant.openHour;
             return View(addBookingViewModel);
@@ -594,26 +604,30 @@ e.Type == type).Count()
         [Authorize]
         public async Task<IActionResult> AddBookingAsync(AddBookingViewModel model, int id)
         {
-            var currentOffers = repository.GetOffers().ToList();
-            List<string> currentCodes = new List<string>();
-            foreach(var o in currentOffers)
+            if(model.VoucherCode != null)
             {
-                currentCodes.Add(o.Code);
+                var currentOffers = repository.GetOffers().ToList();
+                List<string> currentCodes = new List<string>();
+                foreach (var o in currentOffers)
+                {
+                    currentCodes.Add(o.Code);
+                }
+                bool isFound = false;
+                foreach (var c in currentCodes)
+                {
+                    if (model.VoucherCode.Equals(c))
+                        isFound = true;
+                }
+                if (isFound == false)
+                {
+                    ViewBag.ErrorTitle = "Invalid code";
+                    ViewBag.ErrorMessage = "It seems like your code is not valid or has expired. Please check your promotions again.";
+                    return View("Error");
+                }
+
+
             }
-            bool isFound = false;
-            foreach(var c in currentCodes)
-            {
-                if (model.VoucherCode.Equals(c))
-                    isFound = true;
-            }
-            if (isFound == false)
-            {
-                ViewBag.ErrorTitle = "Invalid code";
-                ViewBag.ErrorMessage = "It seems like your code is not valid or has expired. Please check your promotions again.";
-                return View("Error");
-            }
-                
-           
+
             if (ModelState.IsValid)
             {
                 
@@ -628,21 +642,25 @@ e.Type == type).Count()
                     RestaurantId=model.Restaurant.RestaurantID,
                     VoucherCode=model.VoucherCode
                 };
+                
                 if(model.Restaurant.EmptySeats != 0 && newReservation.NrPers <= model.Restaurant.EmptySeats)
                 {
                     model.Restaurant.EmptySeats -= newReservation.NrPers;
                 }
-                if(newReservation.NrPers > model.Restaurant.EmptySeats)
+                if (newReservation.NrPers > model.Restaurant.EmptySeats)
                 {
+                   // ModelState.AddModelError(null," We are very sorry for the inconvenience, but there are not e") ;
+
                     ViewBag.ErrorTitle = "Not enough seats";
                     ViewBag.ErrorMessage = "We are very sorry for the inconvenience, but there are not enough seats for your reservation. Try to go back and see how many seats are left";
-                    return View("Error");
+                    //return View("Error");
                 }
-                if (newReservation.Date.ToShortDateString().Equals(DateTime.Now.ToShortDateString()) &&  newReservation.HourComing <= DateTime.Now.Hour)
+                if (newReservation.Date.ToShortDateString().Equals(DateTime.Now.ToShortDateString()) && newReservation.HourComing <= DateTime.Now.Hour)
                 {
-                    ViewBag.ErrorTitle = "Oops...";
-                    ViewBag.ErrorMessage = "We are very sorry for the inconvenience, but it seems that the hour of your reservation is not valid for that date";
-                    return View("Error");
+                    ModelState.AddModelError(null, " We are very sorry for the inconvenience, but there are not e");
+                    //ViewBag.ErrorTitle = "Oops...";
+                    //ViewBag.ErrorMessage = "We are very sorry for the inconvenience, but it seems that the hour of your reservation is not valid for that date";
+                    //return View("Error");
                 }
                 if (newReservation.Date.ToShortDateString().Equals(DateTime.Now.ToShortDateString()) && newReservation.HourComing <= DateTime.Now.AddHours(2).Hour)
                 {
@@ -651,19 +669,49 @@ e.Type == type).Count()
                     return View("Error");
                 }
                 var currentUserReservations = repository.GetReservations(await GetCurrentUserId());
-                foreach(var res in currentUserReservations)
+                foreach (var res in currentUserReservations)
                 {
-                    if (newReservation.Date.ToShortDateString().Equals(res.Date.ToShortDateString()) && (newReservation.HourComing.Equals(res.HourComing) || newReservation.HourComing<res.HourComing+2))
+                    if (newReservation.Date.ToShortDateString().Equals(res.Date.ToShortDateString()) && (newReservation.HourComing.Equals(res.HourComing) || (newReservation.HourComing.Equals(res.HourComing + 1)) || (newReservation.HourComing.Equals(res.HourComing + 2))))
                     {
                         ViewBag.ErrorTitle = "Multiple reservations at the same time";
                         ViewBag.ErrorMessage = "It seems that you already have a reservation on the specified date and hour. Try a different hour";
                         return View("Error");
                     }
                 }
+                if (model.VoucherCode != null)
+                {
 
+
+                    var premiumOffers = repository.GetOffers();
+                    Dictionary<string, string> codesForRestaurants = new Dictionary<string, string>();
+                    foreach (var o in premiumOffers)
+                    {
+                        codesForRestaurants[o.Code] = o.RestaurantName;
+                    }
+                    if (codesForRestaurants[model.VoucherCode] != model.Restaurant.RestaurantName)
+                    {
+                        ViewBag.ErrorTitle = "Invalid code";
+                        ViewBag.ErrorMessage = "This code cannot be used with this restaurant. Pleaxe check again the available codes";
+                        return View("Error");
+                    }
+                    var reservations = repository.GetReservations(await GetCurrentUserId());
+                    foreach (var r in reservations)
+                    {
+                        if (r.VoucherCode.Equals(model.VoucherCode))
+                        {
+                            ViewBag.ErrorTitle = "Code aleady used";
+                            ViewBag.ErrorMessage = "It seems that you have already used this voucher code. You can use one of the other codes or come back tomorrow for new ones.";
+                            return View("Error");
+                        }
+                    }
+                }
                 ViewBag.Restaurant = model.Restaurant;
-                repository.AddReservation(newReservation);
-                return RedirectToAction("YourReservations", new { id = newReservation.ReservationId });
+
+                if (ModelState.IsValid)
+                {
+                    repository.AddReservation(newReservation);
+                    return RedirectToAction("YourReservations", new { id = newReservation.ReservationId });
+                }
             }
       
             model.Restaurant = repository.GetRestaurant(id);
@@ -715,6 +763,7 @@ e.Type == type).Count()
             {
                 Id = (int)restaurant.RestaurantID,
                 RestaurantName = restaurant.RestaurantName,
+                PhoneNo=restaurant.PhoneNo,
                 Description = restaurant.Description,
                 Type = type,
                 nrPersMax = restaurant.nrPersMax,
@@ -724,10 +773,8 @@ e.Type == type).Count()
                 ExistingPhotoPath = restaurant.PhotoPath,
                 ExistingRestaurantGallery=Gal,
                 Latitude=restaurant.Latitude,
-                Longitude=restaurant.Longitude
-                
-                
-                
+                Longitude=restaurant.Longitude,
+   
             };
             ViewBag.ExistingPhoto = editRestaurantViewModel.ExistingPhotoPath;
             return View(editRestaurantViewModel);
@@ -767,6 +814,9 @@ e.Type == type).Count()
                 restaurant.openHour = model.openHour;
                 restaurant.closingHour = model.closingHour;
                 restaurant.EmptySeats = model.nrPersMax;
+                restaurant.PhoneNo = model.PhoneNo;
+                restaurant.Latitude = model.Latitude;
+                restaurant.Longitude = model.Longitude;
 
 
                 string uniqueFileName = null;

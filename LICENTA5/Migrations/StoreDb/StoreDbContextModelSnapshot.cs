@@ -69,6 +69,9 @@ namespace LICENTA5.Migrations.StoreDb
                     b.Property<string>("Offer")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("RestaurantName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("Today")
                         .HasColumnType("datetime2");
 
@@ -92,6 +95,9 @@ namespace LICENTA5.Migrations.StoreDb
 
                     b.Property<int>("NrPers")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Passed")
+                        .HasColumnType("bit");
 
                     b.Property<long>("RestaurantId")
                         .HasColumnType("bigint");

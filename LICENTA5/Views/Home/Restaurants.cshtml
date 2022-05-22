@@ -1,15 +1,12 @@
 ﻿@model LICENTA5.Models.ViewModels.RestaurantsListViewModel
 @inject SignInManager<ApplicationUser> signInManager;
+@{
+    Layout = "~/Views/Shared/_AboutLayout.cshtml";
 
-<div id="categories" style="width:100%; justify-content:center" >
-    <ul class="nav nav-tabs" role="tablist">
-       
-                <vc:navigation-menu />
-            
-    </ul>
-        @*<vc:navigation-menu />*@
-</div>
-<div style="width:100%; margin-top: 40px"  >
+}
+
+
+<div style="width:100%; margin-top: 40px">
     @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
     {
         <a asp-action="addRestaurant" asp-controller="home" class="btn btn-common">Add restaurant</a>
@@ -30,11 +27,11 @@
     }
 
     <div page-model="@Model.PagingInfo" page-action="Restaurants" page-classes-enabled="true"
-             page-class="btn" page-class-normal="btn-outline-light"
-             page-class-selected="btn-common" class="btn-group pull-right m-1">
+         page-class="btn" page-class-normal="btn-outline-light"
+         page-class-selected="btn-common" page-url-type="@Model?.CurrentCategory!" class="btn-group pull-right m-1">
 
-        </div>
-   
+    </div>
+
 
 </div>
 
@@ -43,3 +40,14 @@
 
 
 
+@section header{
+
+    <div id="categories" style="width:100%; justify-content:center;" >
+        <ul class="nav nav-tabs nav-pills" role="tablist" style="text-size-adjust:150%; ">
+
+            <vc:navigation-menu/>
+
+        </ul>
+        @*<vc:navigation-menu />*@
+    </div>
+}

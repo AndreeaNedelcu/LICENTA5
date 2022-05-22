@@ -204,5 +204,6 @@ namespace LICENTA5.Models
         {
             return context.PremiumOffers;
         }
+
     }
 }
