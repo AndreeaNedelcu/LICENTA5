@@ -1,19 +1,7 @@
 ﻿@{ 
     Layout = "~/Views/Shared/_AboutLayout.cshtml";
 }
-@*<section class="top-main">
-    <div class="top-site-images">
-        <img src="~/images/header1.jpg" alt="">
-    </div>
-    <div class="page-title-wrapper">
-        <div class="container">
-            <div class="banner-wrapper">
-                <h1 class="heading">About Us</h1>
-                <p class="description">REMY - BEST BOOTSTRAP HTML5 RESTAURENT TEMPLATE</p>
-            </div>
-        </div>
-    </div>
-</section>*@
+
 
 
 
@@ -30,10 +18,11 @@
                     <h1>Our wish...</h1>
                     <h3 class="description">Comfort + Quality + Time saving</h3>
                     <p style="color:white">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facere magnam, et quo aliquam dolore aut eveniet possimus! Quos sapiente ad, culpa quas, nisi molestias quam nostrum ipsa voluptatem vel accusantium.
+                      As we live in a very busy world nowadays, why should we lose time in long, sometimes unpleasent phone calls, when trying to book a table at a restaurant? Flash Table is the solution to this problem.
                     </p>
                     <p style="color:white">
-                        Donec at metus ut mauris facilisis elementum. Phasellus scelerisque dui urna. Sed eu vehicula magna, nec accumsan enim. Vestibulum ornare metus sed dolor scelerisque rhoncus. Donec sollicitudin felis et feugiat fermentum. Nunc finibus odio ullamcorper massa lacinia, eu tincidunt urna lacinia. Phasellus vulputate convallis luctus.Nulla sollicitudin, eros quis laoreet vulputate, enim erat rutrum justo, ultrices tempus elit quam vel nulla.
+                       You wish to plan a last minute meeting? With Flash Table you don't need to call to multiple restaurants to check the free seats or ask for the program. You can go through our list of restaurants and find what suites you best.
+                        Check the reviews, find out where it is located and book a table with just a few clicks. It is that easy. 
                     </p>
                     <a asp-controller="Home" asp-action="Restaurants" class="btn btn-common">View Restaurants</a>
                 </div>
@@ -41,9 +30,48 @@
         </div>
     </div>
 
+ 
+    <div class="container">
+        <div class="about-text" style="padding:30px">
+            <h1>What do our users say?</h1>   
+        </div>
+        <div class="row">
+            <div class="col-lg-4 d-flex justify-content-center">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <div class="card-img pt-2 pb-3"> <img src="~/images/aboutus/woman.jpg" alt=""> </div>
+                        <div class="name h5">Anna Stephen</div>
+                        <div class="testimonial"> Easy to use and very accurate. I will never call for a reservation again. I did multiple reservations through Flash Table and I am satisfied with the services. </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 d-flex justify-content-center">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <div class="card-img pt-2 pb-3"> <img src="~/images/aboutus/man.jpg" alt=""> </div>
+                        <div class="name h5">Robert James</div>
+                        <div class="testimonial"> I think everyone should use Flash Table, even if you go out from time to time, or you enjoy going to restaurant very often. This app has only advantages! </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 d-flex justify-content-center">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <div class="card-img pt-2 pb-3"> <img src="https://images.pexels.com/photos/4946604/pexels-photo-4946604.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" /> </div>
+                        <div class="name h5">Mary Williams</div>
+                        <div class="testimonial"> I would recommend this app to anyone. It saves a lot of time and if you become Premium, you will also get new rewards daily. </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
 
     @section header{
 
         <h1 class="heading">About Us</h1>
-        <p class="description">REMY - BEST BOOTSTRAP HTML5 RESTAURENT TEMPLATE</p>
+        <p class="description">Flash Table - What we offer to our clients</p>
     }

@@ -1,7 +1,7 @@
 ﻿@model Reservation
 @inject IStoreRepository repository
 @{
-    var repoPhoto = @repository.GetRestaurant((int)Model.RestaurantId).PhotoPath ?? "noimage.jpg";
+    var repoPhoto = repository.GetRestaurant((int)Model.RestaurantId).PhotoPath ?? "noimage.jpg";
     var photoPath = "noimage.jpg";
     if (repoPhoto != null) {
         photoPath = "../../images/" + (repoPhoto);

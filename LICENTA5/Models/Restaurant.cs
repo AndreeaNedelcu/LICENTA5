@@ -11,6 +11,7 @@ namespace LICENTA5.Models
         public long RestaurantID { get; set; }
         [Required]
         [MaxLength(50, ErrorMessage = "Name cannot exceed 50 characters")]
+        
         public string RestaurantName { get; set; }
 
         [Required]

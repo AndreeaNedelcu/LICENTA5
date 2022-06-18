@@ -33,15 +33,16 @@ namespace LICENTA5.Areas.Identity
                     options.AppSecret = "bb61d6141e5e0d0f045e833aa109857c";
                 });
 
-
                 services.AddDefaultIdentity<ApplicationUser>(options =>
                 {
                     options.SignIn.RequireConfirmedAccount = false;
                     options.SignIn.RequireConfirmedEmail = false;
-                    options.Password.RequireUppercase = false;
-                    options.Password.RequireLowercase = false;
-
-                    options.Lockout.MaxFailedAccessAttempts = 10;
+                    options.Password.RequireUppercase = true;
+                    options.Password.RequireLowercase = true;
+                    options.Password.RequireNonAlphanumeric = true;
+                    options.Password.RequireDigit = true;
+                    options.Password.RequiredLength = 6;
+                    options.Lockout.MaxFailedAccessAttempts = 5;
                     options.User.RequireUniqueEmail = true;
 
                 }).AddRoles<IdentityRole>()

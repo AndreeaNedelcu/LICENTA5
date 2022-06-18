@@ -70,7 +70,7 @@
 
                     <div class="card-body">
 
-                        <a href="https://localhost:44354/home/RestaurantDetails/@Model.RandomRestaurant.RestaurantID" class="btn btn-common" style="padding:10px"><i class="fa-solid fa-lightbulb fa-3x" onclick="help()"></i></a>
+                        <a href="https://localhost:44354/home/RestaurantDetails/@Model.RandomRestaurant.RestaurantID" class="btn btn-common" style="padding:10px;width:64px;height:64px"><i class="fa-solid fa-lightbulb fa-3x" onclick="help()"></i></a>
                         <span style="color:white"><b>RANDOM</b></span>
                         <p style="color:white">Trying new things is important! Let us choose a random restaurant for you.</p>
                     </div>
@@ -91,7 +91,7 @@
                 <div class="card" style="width:250px;margin: 20px; background-color:transparent;color:white">
 
                     <card class="card-body">
-                        <a href="https://localhost:44354/home/RestaurantDetails/@Model.MostPopularRestaurant.RestaurantID" class="btn btn-common" style="padding:10px"><i class="fa-solid fa-fire fa-3x"></i></a>
+                        <a href="https://localhost:44354/home/RestaurantDetails/@Model.MostPopularRestaurant.RestaurantID" class="btn btn-common" style="padding:10px; width:64px;height:64px"><i class="fa-solid fa-fire fa-3x"></i></a>
                         <span style="color:white"><b>POPULAR</b></span>
                         <p style="color:white">Have the best client exeprience at one of our most popular restaurant amoung users</p>
                     </card>
@@ -154,12 +154,12 @@
 
                     <div style="color:white">
                         <h1>What can you find here?</h1>
-
+                        <br />
                         <p style="color:white">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facere magnam, et quo aliquam dolore aut eveniet possimus! Quos sapiente ad, culpa quas, nisi molestias quam nostrum ipsa voluptatem vel accusantium.
+                            If you enjoy eating out, spending time with your friends or just want to make a surprise dinner for someone, this is the app for you. Flash Table gives you full control over your booking experience.
                         </p>
                         <p style="color:white">
-                            Donec at metus ut mauris facilisis elementum. Phasellus scelerisque dui urna. Sed eu vehicula magna, nec accumsan enim. Vestibulum ornare metus sed dolor scelerisque rhoncus. Donec sollicitudin felis et feugiat fermentum. Nunc finibus odio ullamcorper massa lacinia, eu tincidunt urna lacinia. Phasellus vulputate convallis luctus.Nulla sollicitudin, eros quis laoreet vulputate, enim erat rutrum justo, ultrices tempus elit quam vel nulla.
+                          Planning a night out has never been easier. Flash Table is here for you! We have over 50 partner restaurants that are waiting for you. Just go through them and pick your favourite. Use your time wisely and choose Flash Table for any reservation.
                         </p>
 
                     </div>
@@ -239,12 +239,12 @@
     <div class="instructions" style="color:white">
         <h1>Need help? Making a reservation at ... is very easy!</h1>
         <br />
-        <h3>1. Go to Restaurants section and pick your favourite</h3>
+        <p  style="color:white">1. Go to <a asp-controller="Home" asp-action="Restaurants">Restaurants</a> section and pick your favourite</p>
         <br />
 
-        <h3>2. Click on Book table button</h3>
+        <p style="color:white">2. Click on Book table button</p>
         <br />
-        <h3>3. Complete the form with your desired date, people and hour. Click on CREATE button</h3>
+        <p style="color:white">3. Complete the form with your desired date, people and hour. Click on CREATE button</p>
         <br />
 
         <h3>You're all done! You should be able to see your reservation and its details on My Reservations </h3>

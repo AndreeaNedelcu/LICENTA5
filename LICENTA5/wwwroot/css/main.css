@@ -36,6 +36,7 @@ a {
     -webkit-transition: all 0.2s ease-in-out;
     -o-transition: all 0.2s ease-in-out;
     -ms-transition: all 0.2s ease-in-out;
+
 }
 
     a,
@@ -100,7 +101,7 @@ p {
 }
 
 a {
-    color: #444;
+    color: white;
 }
 
 .uppercase {
@@ -2683,4 +2684,17 @@ startFadeN {
 
 .active{
     background-color:orange
+}
+
+h1{
+   color:white;
+}
+
+.myReservationsTitle {
+    font-size: 52px;
+    color: white;
+    margin-bottom: 30px;
+    font-weight: 600;
+    text-transform: uppercase;
+    text-align:center
 }

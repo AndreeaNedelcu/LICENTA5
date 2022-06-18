@@ -69,14 +69,10 @@ namespace LICENTA5.Areas.Identity.Pages.Account
             {
                 ModelState.AddModelError(string.Empty, ErrorMessage);
             }
-
             returnUrl = returnUrl ?? Url.Content("~/");
-
-            // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-
             ReturnUrl = returnUrl;
             
         }
@@ -87,22 +83,11 @@ namespace LICENTA5.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByEmailAsync(Input.Email);
-                if (user != null && !user.EmailConfirmed && (await _userManager.CheckPasswordAsync(user, Input.Password)))
-                {
-                    ModelState.AddModelError(string.Empty, "Email not confirmed");
-                    return Page();
-                }
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+               var user = await _userManager.FindByEmailAsync(Input.Email);
+            
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                   
-     //               var confirmationLink = Url.Action("ConfirmEmail", "Account",
-     //new { userId = user.Id, token = token }, Request.Scheme);
-
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl); 
                 }
@@ -115,7 +100,6 @@ namespace LICENTA5.Areas.Identity.Pages.Account
                     _logger.LogWarning("User account locked out.");
                     return RedirectToPage("./Lockout");
                 }
-
                 else
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
@@ -123,8 +107,6 @@ namespace LICENTA5.Areas.Identity.Pages.Account
                 }
                
             }
-
-            // If we got this far, something failed, redisplay form
             return Page();
         }
 

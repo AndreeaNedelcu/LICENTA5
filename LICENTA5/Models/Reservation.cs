@@ -19,8 +19,6 @@ namespace LICENTA5.Models
        
         public int HourComing { get; set; } //2h
         [Required]
-        //[Range(typeof(DateTime), "1/2/2004", "3/4/2004",
-        //ErrorMessage = "Value for {0} must be between {1} and {2}")]
         [DateValidation]
         public DateTime Date { get; set; }
         public ApplicationUser ApplicationUser { get; set; }

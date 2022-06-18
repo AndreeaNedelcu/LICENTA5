@@ -213,6 +213,7 @@ namespace LICENTA5.Controllers
         public async Task<IActionResult> DeleteUser(string id)
         {
             var user = await userManager.FindByIdAsync(id);
+            var reservations = repository.GetReservations(id).Where(e => e.Passed.Equals(false)).ToList();
 
             if (user == null)
             {
@@ -222,19 +223,34 @@ namespace LICENTA5.Controllers
             }
             else
             {
-                var result = await userManager.DeleteAsync(user);
+                try {
+                    var result = await userManager.DeleteAsync(user);
 
-                if (result.Succeeded)
-                {
-                    return RedirectToAction("ListUsers");
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("ListUsers");
+                    }
+
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+
+                    return View("ListUsers");
                 }
-
-                foreach (var error in result.Errors)
+                catch (DbUpdateException ex)
                 {
-                    ModelState.AddModelError("", error.Description);
-                }
 
-                return View("ListUsers");
+                    if(reservations.Count()>0)
+                    {
+                        ViewBag.ErrorTitle = $"{user.Email} is in use";
+                        ViewBag.ErrorMessage = $"{user.Email} account cannot be deleted. This user has reservations.";
+                        return View("Error");
+                    }
+                    ViewBag.ErrorTitle = $"{user.Email} is in use";
+                    ViewBag.ErrorMessage = $"Before deleting, edit the roles for this user";
+                    return View("Error");
+                }
             }
         }
 

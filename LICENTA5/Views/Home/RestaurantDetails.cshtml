@@ -7,7 +7,8 @@
     var NumberOfRates = Model.RestaurantRatings.Count();
 }
 
-<h3 class=" row justify-content-center" style="color:white; text-decoration:solid">@Model.Restaurant.RestaurantName </h3>
+<h1 class=" row justify-content-center" style="color:white; text-decoration:solid; text-transform:uppercase">@Model.Restaurant.RestaurantName </h1>
+
 
 <div class="container" style="color:white">
 
@@ -24,10 +25,10 @@
                                 <img class="imageCustom" src=@photoPath style=" width:100%; height:100%" />
                             </div>
                             <div class="post-content">
-                                <h3><a href="#">@Model.Restaurant.RestaurantName</a></h3>
+                                <h3><a style="color:darkorange" href="#">@Model.Restaurant.RestaurantName</a></h3>
                                 <ul class="list">
-                                    <li><span>Program:</span><a href="#"> @Model.Restaurant.openHour- @Model.Restaurant.closingHour</a></li>
-                                    <li><span>Capacity:</span><a href="#"> @Model.Restaurant.nrPersMax</a></li>
+                                    <li><span>Program:</span><a style="color:darkorange" href="#"> @Model.Restaurant.openHour- @Model.Restaurant.closingHour</a></li>
+                                    <li><span>Capacity:</span><a style="color:darkorange" href="#"> @Model.Restaurant.nrPersMax</a></li>
                                 </ul>
                                 <div class="post-desc">
                                     <p>
@@ -72,72 +73,84 @@
 
 
                 </div>
-                <!-- Right Sidebar -->
+
                 <div class="col-md-3 col-sm-12 col-xs-12 right-sidebar">
 
-
-
-                    <!-- Recent Posts widget -->
                     <div class="widget recent">
-                        <h5 class="widget-title">Info</h5>
-                        @*<p>Sed tincidunt quam nisi, ac condimentum</p>*@
+                        <h5 class="widget-title" style="justify-content:center; text-transform:uppercase">Info</h5>
                         <br />
                         <ul class="posts-list">
                             <li>
-                                
+
                                 <div class="widget-content">
-                                    <a style="color:white" href="#">Contact</a>
+                                    <a style="color:white; text-transform:uppercase">Contact: </a>
                                     <span style="color:white">@Model.Restaurant.PhoneNo</span>
                                 </div>
                                 <div class="clearfix"></div>
                             </li>
                             <li>
-                                <div class="widget-thumb">
-                                    <a href="#"><img src="assets/img/blog/thumb1.jpg" alt="" /></a>
-                                </div>
+
                                 <div class="widget-content" style="color:white">
-                                    <a>Rating</a>
+                                    <a style="text-transform:uppercase">Rating: </a>
                                     <span>@ViewData["FinalRate"]</span>
                                 </div>
-                                <div class="clearfix"></div>
-                            </li>
-                            <li>
-                                <div class="widget-thumb">
-                                    <a href="#"><img src="assets/img/blog/thumb2.jpg" alt="" /></a>
-                                </div>
-                                <div class="widget-content">
-                                    <a style="color:white" href="#">Comments</a>
-                                    <span style="color:white">2016/01/30</span>
-                                </div>
-                                <div class="clearfix"></div>
+
                             </li>
 
                             <li>
                                 <div class="widget-thumb">
-                                    <div class="container d-flex justify-content-center mt-1">
+                                    <div class="container d-flex justify-content-center mt-1 ml-0">
                                         <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="stars">
-                                                    @using (Html.BeginForm("RestaurantDetails", "Home", FormMethod.Post))
-                                                    {
+                                            <div class="col-md-12" style="padding:0px">
+                                                @if (ViewBag.hasReservation)
+                                                {
+                                                    <div class="stars">
+                                                        @using (Html.BeginForm("RestaurantDetails", "Home", FormMethod.Post))
+                                                        {
 
-                                                        <input class="star star-5" id="star-5" type="radio" name="submit" value="5" />
-                                                        <label id="label5" class="star star-5" for="star-5"></label>
-                                                        <input class="star star-4" id="star-4" type="radio" name="submit" value="4" />
-                                                        <label id="label4" class="star star-4" for="star-4"></label>
-                                                        <input class="star star-3" id="star-3" type="radio" name="submit" value="3" />
-                                                        <label id="label3" class="star star-3" for="star-3"></label>
-                                                        <input class="star star-2" id="star-2" type="radio" name="submit" value="2" />
-                                                        <label id="label2" class="star star-2" for="star-2"></label>
-                                                        <input class="star star-1" id="star-1" type="radio" name="submit" value="1" />
-                                                        <label id="label1" class="star star-1" for="star-1"></label>
+                                                            <input class="star star-5" id="star-5" type="radio" name="submit" value="5" />
+                                                            <label id="label5" class="star star-5" for="star-5"></label>
+                                                            <input class="star star-4" id="star-4" type="radio" name="submit" value="4" />
+                                                            <label id="label4" class="star star-4" for="star-4"></label>
+                                                            <input class="star star-3" id="star-3" type="radio" name="submit" value="3" />
+                                                            <label id="label3" class="star star-3" for="star-3"></label>
+                                                            <input class="star star-2" id="star-2" type="radio" name="submit" value="2" />
+                                                            <label id="label2" class="star star-2" for="star-2"></label>
+                                                            <input class="star star-1" id="star-1" type="radio" name="submit" value="1" />
+                                                            <label id="label1" class="star star-1" for="star-1"></label>
 
-                                                        // /Home
-                                                        <button type="submit" id="btnRate" class="btn btn-common">Send rate</button>
-                                                    }
+                                                            // /Home
+
+                                                            <button type="submit" id="btnRate" class="btn btn-common">Send rate</button>
+                                                        }
 
 
-                                                </div>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="stars">
+                                                        @using (Html.BeginForm("RestaurantDetails", "Home", FormMethod.Post))
+                                                        {
+
+                                                            <input class="star star-5" id="star-5" type="radio" name="submit" value="5" />
+                                                            <label id="label5" class="star star-5" for="star-5"></label>
+                                                            <input class="star star-4" id="star-4" type="radio" name="submit" value="4" />
+                                                            <label id="label4" class="star star-4" for="star-4"></label>
+                                                            <input class="star star-3" id="star-3" type="radio" name="submit" value="3" />
+                                                            <label id="label3" class="star star-3" for="star-3"></label>
+                                                            <input class="star star-2" id="star-2" type="radio" name="submit" value="2" />
+                                                            <label id="label2" class="star star-2" for="star-2"></label>
+                                                            <input class="star star-1" id="star-1" type="radio" name="submit" value="1" />
+                                                            <label id="label1" class="star star-1" for="star-1"></label>
+
+                                                            <button type="submit" id="btnRate" class="btn btn-common tooltip" disabled title="You don't have any previous reservation here">Send rate</button>
+                                                        }
+
+
+                                                    </div>
+                                                }
+
                                             </div>
                                         </div>
                                     </div>
@@ -169,8 +182,6 @@
             </div>
         </div>
     </div>
-    <!-- Page Section End -->
-
 
 </div>
 

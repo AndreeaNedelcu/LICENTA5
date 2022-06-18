@@ -32,20 +32,20 @@ namespace LICENTA5.Models
             return "";
         }
 
-        public async Task<string> GetGeoInfo()
-        {
-            //I have already created this function under GeoInfoProvider class.
-            var ipAddress = await GetIPAddress();
-            // When geting ipaddress, call this function and pass ipaddress as given below
-            var response = await _httpClient.GetAsync($"http://api.ipstack.com/" + ipAddress + "?access_key=181601ebb5b10caa7cac2b391e8a23e7");
-            if (response.IsSuccessStatusCode)
-            {
-                var json = await response.Content.ReadAsStringAsync();
-                var model = new GeoInfoViewModel();
-                model = JsonConvert.DeserializeObject<GeoInfoViewModel>(json);
+        //public async Task<string> GetGeoInfo()
+        //{
+        //    //I have already created this function under GeoInfoProvider class.
+        //    var ipAddress = await GetIPAddress();
+        //    // When geting ipaddress, call this function and pass ipaddress as given below
+        //    var response = await _httpClient.GetAsync($"http://api.ipstack.com/" + ipAddress + "?access_key=181601ebb5b10caa7cac2b391e8a23e7");
+        //    if (response.IsSuccessStatusCode)
+        //    {
+        //        var json = await response.Content.ReadAsStringAsync();
+        //        var model = new GeoInfoViewModel();
+        //        model = JsonConvert.DeserializeObject<GeoInfoViewModel>(json);
                 
-            }
-            return null;
-        }
+        //    }
+        //    return null;
+        //}
     }
 }

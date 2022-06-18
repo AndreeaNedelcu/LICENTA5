@@ -36,6 +36,7 @@ namespace LICENTA5
             services.AddRazorPages();
             services.AddDistributedMemoryCache();
             services.AddSession();
+
             services.AddMvc(config =>
             {
                 var policy = new AuthorizationPolicyBuilder()
@@ -43,6 +44,7 @@ namespace LICENTA5
                 .Build();
                 config.Filters.Add(new AuthorizeFilter(policy));
             });
+
             services.AddDbContext<StoreDbContext>(opts => {
                
                 opts.UseSqlServer(

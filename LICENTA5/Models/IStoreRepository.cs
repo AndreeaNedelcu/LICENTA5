@@ -16,7 +16,9 @@ namespace LICENTA5.Models
         List<RestaurantGallery> GetGallery(int id);
 
         Reservation AddReservation(Reservation reservation);
-       
+
+
+        IEnumerable<Reservation> GeAlltReservations();
         IEnumerable<Reservation> GetReservations(string userId);
         IEnumerable<Reservation> GetReservationsAtRestaurant(long restaurantId);
         Reservation GetReservation(string userId, int resId);

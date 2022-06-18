@@ -260,7 +260,6 @@ C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\obj\Debug\netcoreapp3.1\Razor\Ar
 C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\GeoHelper.dll
 C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\MaxMind.Db.dll
 C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\MaxMind.GeoIP2.dll
-C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\obj\Debug\netcoreapp3.1\LICENTA5.csprojAssemblyReference.cache
 C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\obj\Debug\netcoreapp3.1\Razor\Views\Home\BuyGiftCard.cshtml.g.cs
 C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\obj\Debug\netcoreapp3.1\Razor\Views\Shared\GiftCardSuccess.cshtml.g.cs
 C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\Microsoft.Win32.SystemEvents.dll
@@ -276,3 +275,5 @@ C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\runtimes
 C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.1\System.Drawing.Common.dll
 C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_RestaurantAddedSuccessfully.cshtml.g.cs
 C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_AboutLayout.cshtml.g.cs
+C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_YourReservationsLayout.cshtml.g.cs
+C:\Users\Andreea\source\repos\LICENTA5\LICENTA5\obj\Debug\netcoreapp3.1\LICENTA5.csprojAssemblyReference.cache

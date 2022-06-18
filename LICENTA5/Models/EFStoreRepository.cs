@@ -130,7 +130,7 @@ namespace LICENTA5.Models
         public IEnumerable<Restaurant> Search(string SearchTerm)
         {
             
-            var result= context.Restaurants.AsEnumerable();
+            var result= context.Restaurants.Where(e=>e.Confirmed.Equals(true)).AsEnumerable();
             if (string.IsNullOrEmpty(SearchTerm))
             {
                 return result;
@@ -205,5 +205,9 @@ namespace LICENTA5.Models
             return context.PremiumOffers;
         }
 
+        public IEnumerable<Reservation> GeAlltReservations()
+        {
+            return context.Reservations;
+        }
     }
 }

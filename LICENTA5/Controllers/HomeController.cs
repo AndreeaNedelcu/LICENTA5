@@ -70,8 +70,11 @@ namespace LICENTA5.Controllers
 
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
+    
         private double distance(double lat1, double lon1, double lat2, double lon2)
         {
+            int minutesInADegree = 60;
+            double nauticalMile = 1.1515;
             double theta = lon1 - lon2;
             double dist = Math.Sin(deg2rad(lat1))
                             * Math.Sin(deg2rad(lat2))
@@ -80,7 +83,7 @@ namespace LICENTA5.Controllers
                             * Math.Cos(deg2rad(theta));
             dist = Math.Acos(dist);
             dist = rad2deg(dist);
-            dist = dist * 60 * 1.1515;
+            dist = dist * minutesInADegree * nauticalMile;
             return (dist);
         }
 
@@ -98,23 +101,31 @@ namespace LICENTA5.Controllers
         {
             Random _random = new Random();
         var builder = new StringBuilder(size);
-
-            // Unicode/ASCII Letters are divided into two blocks
-            // (Letters 65–90 / 97–122):   
-            // The first group containing the uppercase letters and
-            // the second group containing the lowercase.  
-
-            // char is a single Unicode character  
+ 
             char offset = lowerCase ? 'a' : 'A';
-            const int lettersOffset = 26; // A...Z or a..z: length = 26  
+            const int lettersOffset = 26; 
 
             for (var i = 0; i < size; i++)
             {
-                var @char = (char)_random.Next(offset, offset + lettersOffset);
-                builder.Append(@char);
+                var character = (char)_random.Next(offset, offset + lettersOffset);
+                builder.Append(character);
             }
 
             return lowerCase ? builder.ToString().ToLower() : builder.ToString();
+        }
+
+        public static bool CheckForInternetConnection()
+        {
+            try
+            {
+                using (var client = new WebClient())
+                using (client.OpenRead("http://google.com/generate_204"))
+                    return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         [AllowAnonymous]
@@ -126,41 +137,44 @@ namespace LICENTA5.Controllers
             int toSkip = rand.Next(1, repository.Restaurants.Count());
             Restaurant res = null;
 
-               res = repository.Restaurants.Skip(toSkip).Take(1).FirstOrDefault();
+               res = repository.Restaurants.Where(e=>e.Confirmed.Equals(true)).Skip(toSkip).Take(1).FirstOrDefault();
             IndexViewModel model = null;
 
             GeoInfoProvider geoInfoProvider = new GeoInfoProvider();
-           
-            var ipAddress = await geoInfoProvider.GetIPAddress();
-            var response = await _httpClient.GetAsync($"http://api.ipstack.com/" + ipAddress + "?access_key=181601ebb5b10caa7cac2b391e8a23e7");
-            var locatioNinfo = new GeoInfoViewModel();
-            if (response.IsSuccessStatusCode)
-            {
-                var json = await response.Content.ReadAsStringAsync();
-               
-                locatioNinfo = JsonConvert.DeserializeObject<GeoInfoViewModel>(json);
-
-               
-            }
-            //PROXY ?????
             var latitude = 0.0;
             var longitud = 0.0;
-            if (locatioNinfo != null)
-            {
-                 latitude = Decimal.ToDouble(locatioNinfo.Latitude);
-                 longitud = Decimal.ToDouble(locatioNinfo.Longitude);
-               //  longitud = Double.Parse(locatioNinfo.Longitude);
-            }
-            else
-            {
-                latitude = 0;
-                longitud = 0;
-            }
-           
             var restaurants = repository.Restaurants;
             var minDistance = 9999.999;
             var closestRestaurant = new Restaurant();
-            foreach(var restaurant in restaurants)
+            if (CheckForInternetConnection()) {
+                var ipAddress = await geoInfoProvider.GetIPAddress();
+
+                var response = await _httpClient.GetAsync($"http://api.ipstack.com/" + ipAddress + "?access_key=181601ebb5b10caa7cac2b391e8a23e7");
+                var locatioNinfo = new GeoInfoViewModel();
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+
+                    locatioNinfo = JsonConvert.DeserializeObject<GeoInfoViewModel>(json);
+                }
+
+               
+                if (locatioNinfo != null)
+                {
+                    latitude = Decimal.ToDouble(locatioNinfo.Latitude);
+                    longitud = Decimal.ToDouble(locatioNinfo.Longitude);
+                   
+                }
+                
+            }
+            else
+            {
+                //ViewBag.ErrorTitle = "Connection issue";
+                //ViewBag.ErrorMessage = "We do not have access to your current location";
+                //return View("Error");
+            }
+
+            foreach (var restaurant in restaurants.Where(e=> e.Confirmed.Equals(true)))
             {
                 var dist = distance(latitude, longitud, restaurant.Latitude, restaurant.Longitude);
                 if (dist < minDistance)
@@ -172,7 +186,7 @@ namespace LICENTA5.Controllers
 
             var maxReservations = 0;
             var mostPopularRestaurant = new Restaurant();
-            foreach(var restaurant in restaurants)
+            foreach(var restaurant in restaurants.Where(e=>e.Confirmed.Equals(true)))
             {
                 var noOfReservations = repository.GetReservationsAtRestaurant(restaurant.RestaurantID).Count();
                 if(noOfReservations> maxReservations)
@@ -196,7 +210,6 @@ namespace LICENTA5.Controllers
        
 
         [AllowAnonymous]
-       
         public IActionResult AboutUs()
         {
             return View();
@@ -330,7 +343,7 @@ e.Type == type).Count()
                         repository.Update(restaurant);
                         i.Passed = true;
                         repository.Update(i, await GetCurrentUserId());
-                      //  repository.DeleteReservation(i.ReservationId);
+                      
                     }
                         
                 }
@@ -416,8 +429,7 @@ e.Type == type).Count()
                 string uniqueFileName = null;
                 float lat = 0;
                 float lng = 0;
-                // If the Photo property on the incoming model object is not null, then the user
-                // has selected an image to upload.
+            
                 if (model.Photo != null)
                 {
                     string folder = "images";
@@ -442,8 +454,6 @@ e.Type == type).Count()
                             model.Gallery.Add(gallery);
                         }
                     }
-                   
-
                    
                 }
                 if((model.Latitude !=null || model.Latitude != 0) && (model.Longitude !=null || model.Longitude !=0))
@@ -505,7 +515,6 @@ e.Type == type).Count()
                 }
                 ViewData["MyKeyMaps"] = "AIzaSyDq_B5S5fvlG2VbaEYRDkG59Wc7pjs4ZbQ";
                 repository.Add(newRest);
-               // return PartialView("_RestaurantAddedSuccessfully");
                 return RedirectToAction("Restaurants", new { id = newRest.RestaurantID });
             }
             return View();
@@ -527,7 +536,7 @@ e.Type == type).Count()
 
         [HttpGet]
         [AllowAnonymous]
-        public ViewResult RestaurantDetails(int id, string submit)
+        public async Task<ViewResult> RestaurantDetailsAsync(int id)
         {
             List<RestaurantRating> RatingList = new List<RestaurantRating>();
             RatingList.Add(new RestaurantRating { Rating = 1, RestaurantId = id });
@@ -575,7 +584,15 @@ e.Type == type).Count()
             //{
             //    repository.AddRating(new RestaurantRating { Rating = 5, RestaurantId = restaurant.RestaurantID });
             //}
-
+            var userReservations = repository.GetReservations(await GetCurrentUserId()).Where(e => e.Passed.Equals(true && e.RestaurantId.Equals(Id)));
+            if (userReservations.Count() > 0)
+            {
+                ViewBag.hasReservation = true;
+            }
+            else
+            {
+                ViewBag.hasReservation = false;
+            }
             ViewData["MyKeyMaps"] = "AIzaSyDq_B5S5fvlG2VbaEYRDkG59Wc7pjs4ZbQ";
             return View(restDetails);
         }
@@ -620,9 +637,8 @@ e.Type == type).Count()
                 }
                 if (isFound == false)
                 {
-                    ViewBag.ErrorTitle = "Invalid code";
-                    ViewBag.ErrorMessage = "It seems like your code is not valid or has expired. Please check your promotions again.";
-                    return View("Error");
+                    ModelState.AddModelError("VoucherCode", "Invalid code");
+
                 }
 
 
@@ -649,39 +665,30 @@ e.Type == type).Count()
                 }
                 if (newReservation.NrPers > model.Restaurant.EmptySeats)
                 {
-                   // ModelState.AddModelError(null," We are very sorry for the inconvenience, but there are not e") ;
+                   ModelState.AddModelError("NrPers"," Not enough empty seats") ;
 
-                    ViewBag.ErrorTitle = "Not enough seats";
-                    ViewBag.ErrorMessage = "We are very sorry for the inconvenience, but there are not enough seats for your reservation. Try to go back and see how many seats are left";
-                    //return View("Error");
                 }
                 if (newReservation.Date.ToShortDateString().Equals(DateTime.Now.ToShortDateString()) && newReservation.HourComing <= DateTime.Now.Hour)
                 {
-                    ModelState.AddModelError(null, " We are very sorry for the inconvenience, but there are not e");
-                    //ViewBag.ErrorTitle = "Oops...";
-                    //ViewBag.ErrorMessage = "We are very sorry for the inconvenience, but it seems that the hour of your reservation is not valid for that date";
-                    //return View("Error");
+                    ModelState.AddModelError("Date", "Invalid hour or date");
+                    
                 }
                 if (newReservation.Date.ToShortDateString().Equals(DateTime.Now.ToShortDateString()) && newReservation.HourComing <= DateTime.Now.AddHours(2).Hour)
                 {
-                    ViewBag.ErrorTitle = "Oops...";
-                    ViewBag.ErrorMessage = "We are very sorry for the inconvenience, but you have 2 make a reservation with at least 2 hours before";
-                    return View("Error");
+                    ModelState.AddModelError("HourComing", "Book a table at least 2 hours before");
+
                 }
                 var currentUserReservations = repository.GetReservations(await GetCurrentUserId());
                 foreach (var res in currentUserReservations)
                 {
                     if (newReservation.Date.ToShortDateString().Equals(res.Date.ToShortDateString()) && (newReservation.HourComing.Equals(res.HourComing) || (newReservation.HourComing.Equals(res.HourComing + 1)) || (newReservation.HourComing.Equals(res.HourComing + 2))))
                     {
-                        ViewBag.ErrorTitle = "Multiple reservations at the same time";
-                        ViewBag.ErrorMessage = "It seems that you already have a reservation on the specified date and hour. Try a different hour";
-                        return View("Error");
+                        ModelState.AddModelError("Date", "You already have a reservation at this time");
+                      
                     }
                 }
                 if (model.VoucherCode != null)
                 {
-
-
                     var premiumOffers = repository.GetOffers();
                     Dictionary<string, string> codesForRestaurants = new Dictionary<string, string>();
                     foreach (var o in premiumOffers)
@@ -690,19 +697,20 @@ e.Type == type).Count()
                     }
                     if (codesForRestaurants[model.VoucherCode] != model.Restaurant.RestaurantName)
                     {
-                        ViewBag.ErrorTitle = "Invalid code";
-                        ViewBag.ErrorMessage = "This code cannot be used with this restaurant. Pleaxe check again the available codes";
-                        return View("Error");
+                       
+                        ModelState.AddModelError("VoucherCode", "Wrong code");
                     }
                     var reservations = repository.GetReservations(await GetCurrentUserId());
                     foreach (var r in reservations)
                     {
-                        if (r.VoucherCode.Equals(model.VoucherCode))
+                        if(r.VoucherCode != null)
                         {
-                            ViewBag.ErrorTitle = "Code aleady used";
-                            ViewBag.ErrorMessage = "It seems that you have already used this voucher code. You can use one of the other codes or come back tomorrow for new ones.";
-                            return View("Error");
+                            if (r.VoucherCode.Equals(model.VoucherCode))
+                            {
+                                ModelState.AddModelError("VoucherCode", "Code already used");
+                            }
                         }
+
                     }
                 }
                 ViewBag.Restaurant = model.Restaurant;
@@ -876,9 +884,16 @@ e.Type == type).Count()
 
 
                 }
+                if (_signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                {
+                    restaurant.Confirmed = true;
+                }
+                else
+                {
+                    restaurant.Confirmed = false;
+                }
 
-
-                repository.Update(restaurant);
+                    repository.Update(restaurant);
                 return RedirectToAction("Restaurants", new { id = restaurant.RestaurantID });
             }
             return View();
@@ -889,7 +904,16 @@ e.Type == type).Count()
         public  IActionResult DeleteRestaurant(int id)
         {
             var restaurant = repository.GetRestaurant(id);
-
+            var reservations = repository.GetReservationsAtRestaurant(id).Where(e => e.Passed.Equals(false));
+            foreach(var reservation in reservations)
+            {
+                if (reservation.RestaurantId.Equals(id))
+                {
+                    ViewBag.ErrorTitle = "Cannot delete";
+                    ViewBag.ErrorMessage = "This restaurant has upcoming reservations";
+                    return View("Error");
+                }
+            }
             if (restaurant == null)
             {
 
@@ -1023,15 +1047,17 @@ e.Type == type).Count()
         [Authorize]
         public async Task<IActionResult> RestaurantDetails(RestaurantDetailsViewModel model,  int id)
         {
+
             if (ModelState.IsValid)
             {
                 model.Restaurant = repository.GetRestaurant(id);
                 Restaurant res = model.Restaurant;
 
+                if (Request.Form["submit"].Count() > 0) {
+                    int rate = Int16.Parse(Request.Form["submit"].First().ToString());
+                    repository.AddRating(new RestaurantRating { Rating = rate, RestaurantId = model.Restaurant.RestaurantID });
+                }
 
-                int rate = Int16.Parse(Request.Form["submit"].First().ToString());
-                repository.AddRating(new RestaurantRating { Rating = rate, RestaurantId = model.Restaurant.RestaurantID });
-                
                 var Ratings = repository.Ratings(res.RestaurantID);
                 var SumOfRates = 0;
                 foreach(var i in Ratings)
@@ -1039,11 +1065,20 @@ e.Type == type).Count()
                     SumOfRates += i.Rating;
                 }
                 double finalRate = SumOfRates / Ratings.Count();
+
+                var userReservations = repository.GetReservations(await GetCurrentUserId()).Where(e => e.Passed.Equals(true && e.RestaurantId.Equals(model.Restaurant.RestaurantID)));
+                if (userReservations.Count()<0 || userReservations==null)
+                {
+                    ModelState.AddModelError("", "You don't have previous reservations at this restaurant");
+                }
+
+                
                 ViewData["FinalRate"] = finalRate;
                 return RedirectToAction("RestaurantDetails", new { id = res.RestaurantID });
             }
+           
 
-            
+
             return View();
         }
 
@@ -1198,13 +1233,6 @@ e.Type == type).Count()
                 };
                 repository.AddGiftCard(card);
 
-                //QRCodeGenerator qRCodeGenerator = new QRCodeGenerator();
-                //QRCodeData qRCodeData = qRCodeGenerator.CreateQrCode(card.GiftCardID + card.Message, QRCodeGenerator.ECCLevel.Q);
-                //QRCode qRCode = new QRCode(qRCodeData);
-                //Bitmap bitmap = qRCode.GetGraphic(15);
-                //var bitmapBytes = ConvertBitmapToBytes(bitmap);
-                //ViewBag.QR = bitmapBytes; 
-
                 using (MailMessage mm = new MailMessage("flashtable0@gmail.com", card.ReceiverEmail))
                 {
                     mm.Subject = "Flash Table Gift Card";
@@ -1216,30 +1244,25 @@ e.Type == type).Count()
                         using (Bitmap bitmap = qRCode.GetGraphic(20))
                         {
                             bitmap.Save(ms, ImageFormat.Png);
-                            //  bitmap.Save("qrinitial", ImageFormat.Png);
-                            bitmap.Save("qrinitial3", ImageFormat.Jpeg);
+                             bitmap.Save("OR_Voucher_Code", ImageFormat.Png);
+                           // bitmap.Save("OR_Voucher_Code", ImageFormat.Jpeg);
                            // ViewData["QRCODE"] = "data:image/png;base64," + Convert.ToBase64String(ms.ToArray());
                             // mm.Body = "data:image/png;base64," + Convert.ToBase64String(ms.ToArray());
                         }
-
-                        string filename = Path.GetFileName("qrinitial3");
+                        string filename = Path.GetFileName("OR_Voucher_Code");
                         mm.Attachments.Add(new Attachment(ms, filename));
-
-
                         bool hasMessage = false;
                         if (card.Message != null)
                         {
-                            mm.Body = "Your friend " + card.SenderFullName + " sent you a gift card.\n" + "You also have the following message: " + card.Message + "\nThe value of the gift card is " + card.CardValue +
-                                " and it is valid between " + DateTime.Now.ToShortDateString()
+                            mm.Body = "Your friend " + card.SenderFullName  + "  sent you a gift card.\n" + "You also have the following message: " + card.Message + "\nThe value of the gift card is " + card.CardValue +
+                                "  and it is valid between " + DateTime.Now.ToShortDateString()
                            + "-" + DateTime.Now.AddMonths(6).ToShortDateString() + "\nWe are looking forward to meet you in one of our partner restaurants!";
-                        }
+                        } 
                         else
                         {
                             mm.Body = "Your friend " + card.SenderFullName + "sent you a gift card. \n The value of the gift card is " + card.CardValue + "and it is valid between " + DateTime.Now.ToShortDateString()
                            + "-" + DateTime.Now.AddMonths(6).ToShortDateString() + "\nWe are looking forward to meet you in one of our partner restaurants!";
                         }
-
-
                         mm.IsBodyHtml = false;
                         using (SmtpClient smtp = new SmtpClient())
                         {
@@ -1253,7 +1276,6 @@ e.Type == type).Count()
 
                         }
                     }
-                   
                 }
 
                 return RedirectToAction("GiftCardSuccess");
