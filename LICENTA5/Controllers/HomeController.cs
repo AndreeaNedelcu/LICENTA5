@@ -25,6 +25,7 @@ using System.Net;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Text;
+using Microsoft.ML;
 
 namespace LICENTA5.Controllers
 {
@@ -132,7 +133,7 @@ namespace LICENTA5.Controllers
         public async Task<IActionResult> IndexAsync(string? searchTerm)
         {
             var displaydata = repository.Search(searchTerm).ToList();
-
+            //Recommend();
             Random rand = new Random();
             int toSkip = rand.Next(1, repository.Restaurants.Count());
             Restaurant res = null;
@@ -205,6 +206,7 @@ namespace LICENTA5.Controllers
 
                 };
             ViewBag.lat = latitude;
+            getPremiumFeatures();
             return View(model);
         }
        
@@ -212,14 +214,17 @@ namespace LICENTA5.Controllers
         [AllowAnonymous]
         public IActionResult AboutUs()
         {
+            getPremiumFeatures();
             return View();
         }
         [AllowAnonymous]
-        public ViewResult Restaurants(string type, int page = 1)
-            => View(new RestaurantsListViewModel
+        public ViewResult Restaurants(string type, int page = 1) {
+
+
+            RestaurantsListViewModel model = new RestaurantsListViewModel
             {
                 Restaurants = repository.Restaurants
-                .Where(p => type == null || p.Type==type)
+                .Where(p => type == null || p.Type == type)
             .OrderBy(p => p.RestaurantID)
             .Skip((page - 1) * PageSize)
             .Take(PageSize),
@@ -233,10 +238,15 @@ repository.Restaurants.Where(e =>
 e.Type == type).Count()
                 },
                 CurrentCategory = type
-            });
+            };
+            ViewBag.Category = model.CurrentCategory;
+
+            return View(model);
+        }
         [Authorize]
         public ViewResult CreateBooking()
-        { 
+        {
+            getPremiumFeatures();
             return View();
         }
 
@@ -302,6 +312,7 @@ e.Type == type).Count()
         public async Task<IActionResult> YourReservationsAsync(string? sortOrder, int page=1)
         {
             int pageSize = 3;
+         
             var modelReservations = repository.GetReservations(await GetCurrentUserId()).Where(e => e.Passed.Equals(false));
             ApplicationUser user = await _userManager.GetUserAsync(HttpContext.User);
 
@@ -348,6 +359,7 @@ e.Type == type).Count()
                         
                 }
             }
+            
             YourReservationsViewModel model = new YourReservationsViewModel
             {
                 Reservations = modelReservations.Skip((page - 1)*PageSizeReservations).Take(PageSizeReservations),
@@ -358,18 +370,25 @@ e.Type == type).Count()
                     TotalItems = modelReservations.Count()
                 }
             };
+            getPremiumFeatures();
+   
+            return View(model);
+        }
 
+        public void getPremiumFeatures()
+        {
             var today = DateTime.Now;
             var premiumOffersData = repository.GetOffers();
-            if(premiumOffersData.Count()==0)
+            if (premiumOffersData.Count() == 0)
             {
                 ChangePremiumOffers();
-            }else if (!(today.ToShortDateString().Equals(repository.GetOffers().First().Today.ToShortDateString())))
+            }
+            else if (!(today.ToShortDateString().Equals(repository.GetOffers().First().Today.ToShortDateString())))
             {
                 List<PremiumOffer> currentOffers = repository.GetOffers().ToList();
-                foreach(var o in currentOffers)
+                foreach (var o in currentOffers)
                 {
-                  repository.DeletePremiumOffer(o.Id);
+                    repository.DeletePremiumOffer(o.Id);
                 }
                 ChangePremiumOffers();
             }
@@ -377,33 +396,36 @@ e.Type == type).Count()
             var offers = repository.GetOffers();
             List<string> premiumFeatures = new List<string>();
             List<string> voucherCodes = new List<string>();
-            foreach (PremiumOffer o in offers){
+            foreach (PremiumOffer o in offers)
+            {
                 premiumFeatures.Add(o.Offer);
                 voucherCodes.Add(o.Code);
             }
 
             ViewBag.listFeatures = premiumFeatures;
             ViewBag.listCodes = voucherCodes;
-            return View(model);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
-        {
+        {getPremiumFeatures();
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
        
 
         [HttpGet]
+        [Authorize(Roles ="Admin, User, Premium-User")]
         public ViewResult AddRestaurant()
         {
+            getPremiumFeatures();
             ViewData["MyKeyMaps"] = "AIzaSyDq_B5S5fvlG2VbaEYRDkG59Wc7pjs4ZbQ";
             return View();
         }
 
 
         [HttpPost]
+        [Authorize(Roles = "Admin, User, Premium-User")]
         public async Task<IActionResult> AddRestaurantAsync(RestaurantCreateViewModel model)
         {
             
@@ -513,6 +535,7 @@ e.Type == type).Count()
                         });
                     }
                 }
+                getPremiumFeatures();
                 ViewData["MyKeyMaps"] = "AIzaSyDq_B5S5fvlG2VbaEYRDkG59Wc7pjs4ZbQ";
                 repository.Add(newRest);
                 return RedirectToAction("Restaurants", new { id = newRest.RestaurantID });
@@ -561,7 +584,8 @@ e.Type == type).Count()
             }
             double finalRate = 0.0;
             finalRate = (double)SumOfRates / Ratings.Count();
-            ViewData["FinalRate"] = finalRate;
+            
+            ViewData["FinalRate"] = finalRate.ToString("0.0"); 
 
             RestaurantDetailsViewModel restDetails = new RestaurantDetailsViewModel()
             {
@@ -584,15 +608,18 @@ e.Type == type).Count()
             //{
             //    repository.AddRating(new RestaurantRating { Rating = 5, RestaurantId = restaurant.RestaurantID });
             //}
-            var userReservations = repository.GetReservations(await GetCurrentUserId()).Where(e => e.Passed.Equals(true && e.RestaurantId.Equals(Id)));
-            if (userReservations.Count() > 0)
-            {
-                ViewBag.hasReservation = true;
-            }
-            else
-            {
-                ViewBag.hasReservation = false;
-            }
+
+            //DECOMENTEAZA!!!
+            //var userReservations = repository.GetReservations(await GetCurrentUserId()).Where(e => e.Passed.Equals(true && e.RestaurantId.Equals(Id)));
+            //if (userReservations.Count() > 0)
+            //{
+            //    ViewBag.hasReservation = true;
+            //}
+            //else
+            //{
+            //    ViewBag.hasReservation = false;
+            //}
+            ViewBag.hasReservation = true;
             ViewData["MyKeyMaps"] = "AIzaSyDq_B5S5fvlG2VbaEYRDkG59Wc7pjs4ZbQ";
             return View(restDetails);
         }
@@ -608,6 +635,7 @@ e.Type == type).Count()
                Restaurant= repository.GetRestaurant(Id),
                 PageTitle = "Create reservation at "
             };
+            getPremiumFeatures();
             ViewBag.open = addBookingViewModel.Restaurant.openHour;
             ViewBag.close = addBookingViewModel.Restaurant.closingHour;
             ViewBag.ReservationAt = addBookingViewModel.Restaurant.RestaurantName;
@@ -721,7 +749,7 @@ e.Type == type).Count()
                     return RedirectToAction("YourReservations", new { id = newReservation.ReservationId });
                 }
             }
-      
+            getPremiumFeatures();
             model.Restaurant = repository.GetRestaurant(id);
             ViewBag.ReservationAt = model.Restaurant.RestaurantName;
             ViewBag.SeatsLeft = model.Restaurant.EmptySeats;
@@ -731,7 +759,7 @@ e.Type == type).Count()
 
 
         [HttpGet]
-        [Authorize ]
+        [Authorize(Roles ="Admin, Business") ]
         public ViewResult EditRestaurant(int id)
         {
             var type = "";
@@ -783,12 +811,14 @@ e.Type == type).Count()
                 Latitude=restaurant.Latitude,
                 Longitude=restaurant.Longitude,
    
-            };
+            }; 
+            getPremiumFeatures();
             ViewBag.ExistingPhoto = editRestaurantViewModel.ExistingPhotoPath;
             return View(editRestaurantViewModel);
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Business")]
         public IActionResult EditRestaurant(EditRestaurantViewModel model)
         {
             if (ModelState.IsValid)
@@ -894,15 +924,19 @@ e.Type == type).Count()
                 }
 
                     repository.Update(restaurant);
+                getPremiumFeatures();
                 return RedirectToAction("Restaurants", new { id = restaurant.RestaurantID });
             }
+            getPremiumFeatures();
             return View();
         }
 
-        
-    
+
+        [Authorize(Roles = "Admin, Business")]
+       
         public  IActionResult DeleteRestaurant(int id)
         {
+            getPremiumFeatures();
             var restaurant = repository.GetRestaurant(id);
             var reservations = repository.GetReservationsAtRestaurant(id).Where(e => e.Passed.Equals(false));
             foreach(var reservation in reservations)
@@ -957,6 +991,7 @@ e.Type == type).Count()
             ViewBag.ReservationAt = restaurant.RestaurantName;
             ViewBag.SeatsLeft = restaurant.EmptySeats;
             ViewBag.OpenHour = restaurant.openHour;
+            getPremiumFeatures();
             return View(editReservationViewModel);
         }
 
@@ -1012,7 +1047,7 @@ e.Type == type).Count()
                 repository.Update(res);
                 return RedirectToAction("YourReservations", new { id = reservation.ReservationId });
             }
-
+            getPremiumFeatures();
             Reservation reservation2 = repository.GetReservation(userId, model.Id);
             Restaurant res2 = repository.GetRestaurant((int)reservation2.RestaurantId);
             ViewBag.ReservationAt = res2.RestaurantName;
@@ -1023,6 +1058,7 @@ e.Type == type).Count()
         //[Authorize]
         public async Task<IActionResult> DeleteReservationAsync(int id)
         {
+            getPremiumFeatures();
             string userId = await GetCurrentUserId();
             var reservation = repository.GetReservation(userId, id);
             var restaurant = repository.GetRestaurant((int)reservation.RestaurantId);
@@ -1041,6 +1077,7 @@ e.Type == type).Count()
 
                 return RedirectToAction("YourReservations");
             }
+
         }
 
         [HttpPost]
@@ -1055,7 +1092,7 @@ e.Type == type).Count()
 
                 if (Request.Form["submit"].Count() > 0) {
                     int rate = Int16.Parse(Request.Form["submit"].First().ToString());
-                    repository.AddRating(new RestaurantRating { Rating = rate, RestaurantId = model.Restaurant.RestaurantID });
+                    repository.AddRating(new RestaurantRating { Rating = rate,userId=await GetCurrentUserId(), RestaurantId = model.Restaurant.RestaurantID });
                 }
 
                 var Ratings = repository.Ratings(res.RestaurantID);
@@ -1065,15 +1102,16 @@ e.Type == type).Count()
                     SumOfRates += i.Rating;
                 }
                 double finalRate = SumOfRates / Ratings.Count();
-
-                var userReservations = repository.GetReservations(await GetCurrentUserId()).Where(e => e.Passed.Equals(true && e.RestaurantId.Equals(model.Restaurant.RestaurantID)));
-                if (userReservations.Count()<0 || userReservations==null)
-                {
-                    ModelState.AddModelError("", "You don't have previous reservations at this restaurant");
-                }
+                
+                //DECOMENTEAZA !!!!!!!!!!!!!1
+                //var userReservations = repository.GetReservations(await GetCurrentUserId()).Where(e => e.Passed.Equals(true && e.RestaurantId.Equals(model.Restaurant.RestaurantID)));
+                //if (userReservations.Count()<0 || userReservations==null)
+                //{
+                //    ModelState.AddModelError("", "You don't have previous reservations at this restaurant");
+                //}
 
                 
-                ViewData["FinalRate"] = finalRate;
+                ViewData["FinalRate"] = finalRate.ToString("0.0");
                 return RedirectToAction("RestaurantDetails", new { id = res.RestaurantID });
             }
            
@@ -1174,49 +1212,19 @@ e.Type == type).Count()
 
         }
 
-        //public IActionResult ShowReview(long RestaurantId)
-        //{
-        //     var Ratings = repository.Ratings(RestaurantId);
-        //    return View(Ratings);
-        //}
-
-        [AllowAnonymous]
-        public async Task<IActionResult> ConfirmEmail(string userId, string token)
-        {
-            if (userId == null || token == null)
-            {
-                return RedirectToAction("index", "Home");
-            }
-
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-            {
-                ViewBag.ErrorMessage = $"The User ID {userId} is invalid";
-                return View("NotFound");
-            }
-
-            var result = await _userManager.ConfirmEmailAsync(user, token);
-            if (result.Succeeded)
-            {
-                return View();
-            }
-
-            ViewBag.ErrorTitle = "Email cannot be confirmed";
-            return View("Error");
-        }
-
        
 
         [HttpGet]
         public IActionResult BuyGiftCard()
         {
-
+            getPremiumFeatures();
             return View();
         }
 
        
 
         [HttpPost]
+        
         public IActionResult BuyGiftCard(GiftCard card)
         {
             if (ModelState.IsValid)
@@ -1280,6 +1288,7 @@ e.Type == type).Count()
 
                 return RedirectToAction("GiftCardSuccess");
             }
+            getPremiumFeatures();
             ViewBag.ErrorTitle = "Oops... Something went wrong";
             ViewBag.ErrorMessage = "It seems like there was a problem with your data, try again.";
             return RedirectToAction("Error");
@@ -1293,6 +1302,23 @@ e.Type == type).Count()
         }
 
 
+        public async Task RecommendAsync()
+        {
+            var activeUser = await GetCurrentUserAsync();
+            MLContext mlContext = new MLContext();
+
+
+            List<(int restId, float normalizedScore)> ratings = new List<(int restId, float normalizedScore)>();
+            var PreviousReservations = repository.GetReservations(await GetCurrentUserId()).Where(e => e.Passed.Equals(true));
+            
+
+            //Define DataViewSchema for data preparation pipeline and trained model
+            DataViewSchema modelSchema;
+
+            // Load trained model
+            ITransformer trainedModel = mlContext.Model.Load("Data/RestaurantRecommenderModel.zip", out modelSchema);
+           // return View();
+        }
 
 
     }

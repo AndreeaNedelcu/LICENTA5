@@ -207,6 +207,9 @@ namespace LICENTA5.Migrations.StoreDb
                     b.Property<long>("RestaurantId")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("userId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Ratings");

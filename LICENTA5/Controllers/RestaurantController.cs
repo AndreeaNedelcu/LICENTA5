@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using LICENTA5.Areas.Identity.Data;
 using LICENTA5.Models;
 using LICENTA5.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LICENTA5.Controllers
 {
+    
     public class RestaurantController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -21,6 +23,7 @@ namespace LICENTA5.Controllers
             repository = repo;
         }
 
+
         [HttpGet]
         public async Task<string> GetCurrentUserId()
         {
@@ -29,12 +32,14 @@ namespace LICENTA5.Controllers
         }
 
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
+
         public IActionResult NewRestaurantInfo()
         {
             return View();
         }
 
         [HttpGet]
+        [Authorize(Roles="Business")]
         public IActionResult MyBusiness(string? sortOrder, string? filterParameter, int page = 1)
         {
 
@@ -132,13 +137,17 @@ namespace LICENTA5.Controllers
 
             // for today's chart
             var reservationForWeekChart = reservations.Where(f => f.Date.ToShortDateString().Equals(DateTime.Now.ToShortDateString())).GroupBy(e => e.HourComing);
+         
             Dictionary<int, int> hashTodayReservations = new Dictionary<int, int>();
             foreach (var res in reservationForWeekChart)
             {
                 hashTodayReservations.Add(res.Key, res.Sum(e => e.NrPers));
             }
+            if (reservationForWeekChart.Count() < 1)
+            {
+                hashTodayReservations.Add(0, 0);
+            }
 
-          
             string chart2Values = string.Join(", ",
           hashTodayReservations.Select(d => "[" +  d.Key+ ", " + d.Value + ", color]"));
 

@@ -1,22 +1,25 @@
 ﻿@model IEnumerable<string>
-    <div class="ButtonsContainer" style="width:100%; height:70px">
-        <a class="btn btn-block btn-outline-light" asp-action="Restaurants"
-           asp-controller="Home" asp-route-type="" style="width: 100px; height: auto; float:left; margin-top:8px">
-            View All
+<div class="ButtonsContainer" style="width:100%; height:70px">
+    <a class="btn btn-block btn-outline-light " asp-action="Restaurants"
+       asp-controller="Home" asp-route-type="" style="width: 100px; height: auto; float:left; margin-top:8px">
+        View All
+    </a>
+
+
+    @foreach (string type in Model)
+    {
+        <a class="btn btn-block
+
+                   @(type == ViewBag.SelectedCategory ? "btn-common": "btn-outline-light ")"
+           asp-action="Restaurants" asp-controller="Home"
+           asp-route-type="@type"
+           asp-route-page="1" style="width: 100px; height: auto;float:left;">
+            @type
         </a>
 
-        
-            @foreach (string type in Model)
-            {
-                <a class="btn btn-block 
 
-                   @(type == ViewBag.SelectedCategory ? "btn-primary": "btn-outline-light ")"
-                   asp-action="Restaurants" asp-controller="Home"
-                   asp-route-type="@type"
-                   asp-route-page="1" style="width: 100px; height: auto;float:left;">
-                    @type
-                </a>
 
-            }
-        
-    </div>
+    }
+
+</div>
+

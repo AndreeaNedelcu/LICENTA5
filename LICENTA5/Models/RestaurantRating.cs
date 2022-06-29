@@ -10,6 +10,7 @@ namespace LICENTA5.Models
     {
         public int Id{ get; set; }
        
+        public string userId { get; set; }
         public int Rating { get; set; }
 
         [ForeignKey("Restaurant")]

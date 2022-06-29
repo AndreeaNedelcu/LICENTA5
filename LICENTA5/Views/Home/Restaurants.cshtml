@@ -1,8 +1,8 @@
 ﻿@model LICENTA5.Models.ViewModels.RestaurantsListViewModel
 @inject SignInManager<ApplicationUser> signInManager;
 @{
-    Layout = "~/Views/Shared/_AboutLayout.cshtml";
-
+    Layout = "~/Views/Shared/_RestaurantsLayout.cshtml";
+    var categ = @Model.CurrentCategory;
 }
 
 
@@ -20,7 +20,7 @@
     {
         if (p.Confirmed == true)
         {
-            <partial name="RestaurantSummary" model="p" />
+            <partial name="RestaurantSummary" model="p"/>
         }
     }
 
@@ -35,12 +35,27 @@
 
 @section header{
 
-    <div id="categories" style="width:100%; justify-content:center;" >
-        <ul class="nav nav-tabs nav-pills" role="tablist" style="text-size-adjust:150%; ">
+    <div id="categories">
+       @* <ul class="nav nav-tabs nav-pills orange" role="tablist" style="text-size-adjust:150%; ">*@
 
             <vc:navigation-menu/>
 
-        </ul>
-        @*<vc:navigation-menu />*@
+        @*</ul>*@
+
+           
+
+
+       
     </div>
 }
+
+   @section Scripts{   
+     
+     <script src="https://code.jquery.com/jquery-3.6.0.js" ></script>
+      <script>
+  $(document).on('click', 'ul li', function(){
+      $(this).addClass('active')
+  })
+
+    </script>}
+

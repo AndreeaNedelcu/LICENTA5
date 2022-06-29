@@ -11,28 +11,32 @@
 
 <div class="containerRest row mt-8">
 
-    <div class="container ">
-        <div class="row" style="background-color: darkorange; margin-top:100px; height: 60px; ">
-            <div class="col" style="justify-content:center">
-                @if (signInManager.IsSignedIn(User) && User.IsInRole("Premium-User"))
-                {
-                    <div class="row"> <h1 style="color:white; align-content:center; text-transform:uppercase">Premium</h1></div>
-                }
-                else
-                {
-                    <div class="row"> <h1 style="color:white; align-content:center; text-transform:uppercase">Andreea's reservations</h1></div>
-                }
+    
+
+
+
+
+    <div class="row col-md-12 cardsContainer2">
+        <div class="row col-md-12" style="background-color:black">
+            <div style="padding-top:20px">
+                 <label style="color:white;">ORDER BY DATE: </label>
+           
+            <a id="orderAnch"  asp-action="YourReservations" asp-route-sortOrder="Date"> ASCEDINGLY / </a>
+            <a id="orderAnch"  asp-action="YourReservations" asp-route-sortOrder="date">DESCENDINGLY</a>
 
             </div>
+           
             <div class="col">
                 @if (signInManager.IsSignedIn(User) && User.IsInRole("Premium-User"))
                 {
+                    
+                <div class="container d-flex justify-content-lg-end col-md-12 row">
+                    <label style="color:white; padding-top:20px">VOUCHER CODES: </label>
+                    <div class="row">
 
-                    <div class="container d-flex justify-content-center col-md-6 row">
-                        <div class="row">
-                            <div class="col-md-6" > <button type="button" class="btn btn-lg btn-warning" data-toggle="modal" data-target="#myModal"><i class="fa-solid fa-crown fa-2xl"></i></button> </div>
-                        </div>
+                        <div class="col-md-6"> <button type="button" class="btn btn-lg btn-common" data-toggle="modal" data-target="#myModal"><i class="fa-solid fa-crown fa-2xl"></i></button> </div>
                     </div>
+                </div>
 
                     <div class="modal fade" id="myModal" role="dialog">
                         <div class="modal-dialog">
@@ -48,7 +52,7 @@
                                     @*<div class="container-fluid">*@
                                     <div class="modal-dialog">
                                         <div class="modal-content">
-                                            <div class="modal-header">
+                                            <div class="modal-header" style="padding:0.5rem 0.5rem">
                                                 <h3>TODAY'S OFFERS</h3>
                                             </div>
                                             <div class="modal-body">
@@ -84,21 +88,17 @@
                 }
                 else
                 {
-                    <button class="btn btn-common">Become premium</button>
+                     <div class="container d-flex justify-content-lg-end col-md-12 row">
+                    <label style="color:darkorange; padding-top:20px">MAKE 10 RESERVATIONS THROUGH FLASH TABLE AND  BECOME PREMIUM USER! </label>
+                    <div class="row">
+
+                    </div>
+                </div>
                 }
             </div>
-            <div class="col">
-                <div style="color:white; ">
-                    <a style="color:white" asp-action="YourReservations" asp-route-sortOrder="@ViewData["DateSortParm"]">Order by date</a>
-                </div>
-            </div>
+
         </div>
-    </div>
-
-
-
-
-    <div class="row col-md-12" style="justify-content:center">
+        <hr style="width: inherit; color:black"/>
         @foreach (var p in Model.Reservations)
         {
             <partial style="min-width: 18rem; max-width:30.5%;" name="ReservationSummary" model="p" view-data='@new ViewDataDictionary(ViewData) { { "CurrentHourForPartial", currentHour }
@@ -114,13 +114,38 @@
      page-class-selected="btn-common" class="btn-group pull-right m-1">
 
 </div>
-
-
 <script>
-    function showHide(id) {
-        var e = document.getElementById(id);
-        e.style.display = (e.style.display == 'block') ? 'none' : 'block';
-    }
+
+
+
+    <!--function switchChanged() {
+   //     $.ajax({
+   //         url: 'https://localhost:44354/Home/YourReservations?sortOrder=Date',
+   //type: 'GET',
+
+   //         data: { 'sortOrder': isChecked },
+   //         success: function (results) {
+   //             alert(switchControl.checked);
+   //},
+   //error: function () {
+   // alert('Error occured');
+   //}
+   //});
+
+        var switchControl = document.getElementById("switch");
+        var isChecked;
+        if (switchControl.checked) {
+           var theUrl = '@Url.Action("YourReservations", "Home", new { sortOrder = "Date" })';
+        window.location = theUrl;
+        }
+        else {
+           var theUrl = '@Url.Action("YourReservations", "Home", new { sortOrder = "date" })';
+        window.location = theUrl;
+        }-->
+         @*var theUrl = '@Url.Action("YourReservations", "Home", new { sortOrder = isChecked })';
+        window.location = theUrl;*@
+
+    <!--}-->
 </script>
 
 @section header{
@@ -129,3 +154,4 @@
     <p class="description">Thank you for choosing Flash Table! You can se all your reservations here</p>
 
 }
+

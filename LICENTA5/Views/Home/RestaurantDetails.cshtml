@@ -29,6 +29,7 @@
                                 <ul class="list">
                                     <li><span>Program:</span><a style="color:darkorange" href="#"> @Model.Restaurant.openHour- @Model.Restaurant.closingHour</a></li>
                                     <li><span>Capacity:</span><a style="color:darkorange" href="#"> @Model.Restaurant.nrPersMax</a></li>
+                                      <li><span>Specific:</span><a style="color:darkorange" href="#"> @Model.Restaurant.Type</a></li>
                                 </ul>
                                 <div class="post-desc">
                                     <p>
@@ -83,7 +84,7 @@
                             <li>
 
                                 <div class="widget-content">
-                                    <a style="color:white; text-transform:uppercase">Contact: </a>
+                                    <a style="color:white; text-transform:uppercase; font-size: 15px" ><b>Contact:</b> </a>
                                     <span style="color:white">@Model.Restaurant.PhoneNo</span>
                                 </div>
                                 <div class="clearfix"></div>
@@ -91,7 +92,7 @@
                             <li>
 
                                 <div class="widget-content" style="color:white">
-                                    <a style="text-transform:uppercase">Rating: </a>
+                                    <a style="text-transform:uppercase;font-size: 15px"><b>Rating: </b> </a>
                                     <span>@ViewData["FinalRate"]</span>
                                 </div>
 
@@ -159,7 +160,7 @@
                                 <div class="clearfix"></div>
                             </li>
                             <li>
-                                <div id="map" style="height:230px; width:300px">
+                                <div id="map" style="height:250px; width:300px">
 
                                 </div>
                             </li>
@@ -196,13 +197,13 @@
             var markedPlace = { lat: latitude, lng: longitude };
         map = new google.maps.Map(document.getElementById('map'), {
             center: markedPlace,
-            zoom: 20
+            zoom: 19
         }
         );
-        //const marker = new google.maps.Marker({
-        //    position: markedPlace,
-        //    map: map,
-        //});
+        const marker = new google.maps.Marker({
+            position: markedPlace,
+            map: map,
+        });
         }
 
 

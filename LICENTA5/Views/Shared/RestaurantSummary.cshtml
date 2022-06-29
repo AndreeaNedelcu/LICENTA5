@@ -41,6 +41,10 @@
 
                             }        
                         </div>
+                        <div style="color: darkorange">
+                          Specific:  @Model.Type
+                        </div>
+
                         <p style="color:black">@Model.Description</p>
                         <form id="@Model.RestaurantID" asp-page="/Reservations" method="post">
                             <input type="hidden" asp-for="RestaurantID" />

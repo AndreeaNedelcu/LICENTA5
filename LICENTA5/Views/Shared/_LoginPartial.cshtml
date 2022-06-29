@@ -4,18 +4,18 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
+
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
-        @*<li class="nav-item">
-            <a style="vertical-align:middle" id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="@UserManager.GetUserName(User)">  <i class="fa-solid fa-user fa-2xl"></i>  </a>
-        </li>*@
+
         
+
         <li class="nav-item dropdown">
             @*<form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                     <button id="logout" type="submit" class="nav-link btn btn-link text-dark">Logout</button>
                 </form>*@
-            <a style="vertical-align:middle" id="navbarDropdownMenuLink" class="nav-link dropdown-toggle nav-link btn btn-link text-dark" href="#" title="@UserManager.GetUserName(User)" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">  <i class="fa-solid fa-user fa-2xl"></i>  </a>
+            <a style="vertical-align:middle" id="navbarDropdownMenuLink" class="nav-link dropdown-toggle nav-link btn btn-link text-dark " href="#" title="@UserManager.GetUserName(User)" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">  <i class="fa-solid fa-user fa-2xl"></i>  </a>
 
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                 <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
@@ -38,3 +38,9 @@
     }
 
 </ul>
+<script>
+    function showHide(id) {
+        var e = document.getElementById(id);
+        e.style.display = (e.style.display == 'block') ? 'none' : 'block';
+    }
+</script>
